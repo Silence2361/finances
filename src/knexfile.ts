@@ -1,13 +1,14 @@
-import { knex } from 'knex';
+import { Knex } from 'knex';
 
-const knexConfig = {
+const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'pg',
     connection: {
-      host: 'localhost',
-      user: 'database_user',
-      password: 'database_password',
-      database: 'database_name',
+      host: process.env.DATABASE_HOST,
+      port: Number(process.env.DATABASE_PORT),
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
     },
     migrations: {
       directory: './migrations',
@@ -15,7 +16,8 @@ const knexConfig = {
     seeds: {
       directory: './seeds',
     },
+    debug: true, 
   },
 };
 
-export default knexConfig;
+export default config;
