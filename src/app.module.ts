@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ObjectionModule } from 'nestjs-objection';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CategoriesModule } from './categories/categories.module';
 
 
 @Module({
@@ -35,7 +36,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
-
+    CategoriesModule,
   ],
   controllers: [],
 })
