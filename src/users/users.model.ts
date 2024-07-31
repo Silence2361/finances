@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-
+import { Finance } from '../finances/finances.model';
 
 export class User extends Model {
   static tableName = 'users';
@@ -12,7 +12,18 @@ export class User extends Model {
   createdAt!: Date;
   updatedAt!: Date;
 
-
+  static get relationMappings() {
+    return {
+      finances: {
+        relation: Model.HasManyRelation,
+        modelClass: Finance,
+        join: {
+          from: 'users.id',
+          to: 'finances.user_id',
+        },
+      },
+    };
+  }
 
   static get jsonSchema() {
     return {

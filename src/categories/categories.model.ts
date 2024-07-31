@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import { Finance } from '../finances/finances.model';
 
 export class Category extends Model {
   static tableName = 'categories';
@@ -6,7 +7,18 @@ export class Category extends Model {
   id!: number;
   name!: string;
 
-
+  static get relationMappings() {
+    return {
+      finances: {
+        relation: Model.HasManyRelation,
+        modelClass: Finance,
+        join: {
+          from: 'categories.id',
+          to: 'finances.category_id',
+        },
+      },
+    };
+  }
 
   static get jsonSchema() {
     return {

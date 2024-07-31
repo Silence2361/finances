@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create.category.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './categories.model';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserRequest } from '../auth/interfaces/user-request.interface';

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectModel } from 'nestjs-objection/dist';
 import { ModelClass } from 'objection';
 import { Category } from './categories.model';
-import { CreateCategoryDto } from './dto/create.category.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update.category.dto';
 
 @Injectable()
