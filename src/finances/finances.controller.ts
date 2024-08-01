@@ -25,22 +25,12 @@ export class FinancesController {
         return this.financesService.addFinance(createFinanceDto, userId);
   }
 
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    @ApiOperation({ summary: 'Get all finance records for the user' })
-    @ApiResponse({ status: 200, description: 'Finance records returned successfully' })
-//     async getFinances(@Req() req: UserRequest) {
-//         const user = req.user as IUser;
-//         if (!user) {
-//             throw new UnauthorizedException('User not found');
-//         }
-//         console.log('Request User:', user);
-//         return this.financesService.getFinances(user.id);
-//   }
+    
+
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    @ApiOperation({ summary: 'Get finance records by type' })
+    @ApiOperation({ summary: 'Get finance all finances records or get by type' })
     @ApiResponse({ status: 200, description: 'Finance records returned successfully' })
     async getFinances(@Query('type') type: FinanceType, @Request() req: UserRequest) {
         const userId = req.user.id;
@@ -73,14 +63,31 @@ export class FinancesController {
 
     @UseGuards(JwtAuthGuard)
     @Get('statistics/category')
+    @ApiOperation({summary: 'Get statisctics by category'})
+    @ApiResponse({status: 200, description: 'Return statistics by category'})
+    @ApiResponse({status: 401, description: 'Unauthorized'})
     async getCategoryStatistics(@Req() req: UserRequest){
         const userId = req.user.id
         return this.financesService.getCategoryStatistics(userId)
     }
 
-    @Get()
+    @UseGuards(JwtAuthGuard)
+    @Get('statistics/total')
+    @ApiOperation({summary: 'Get total statisctics'})
+    @ApiResponse({status: 200, description: 'Return total statistics '})
+    @ApiResponse({status: 401, description: 'Unauthorized'})
     async getTotalStatistics(@Req() req: UserRequest){
         const userId = req.user.id
         return this.financesService.getTotalStatistics(userId)
     }   
+
+    @UseGuards(JwtAuthGuard)
+    @Get('statistics/monthly')
+    @ApiOperation({summary: 'Get monthly statisctics'})
+    @ApiResponse({status: 200, description: 'Return monthly statistics'})
+    @ApiResponse({status: 401, description: 'Unauthorized'})
+    async getMonthlyStatistics(@Req() req: UserRequest, @Query('month') month: number, @Query('year') year: number){
+        const userId = req.user.id
+        return this.financesService.getMonthlyStatistics(userId, month,year)
+    }
 }

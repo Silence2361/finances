@@ -57,18 +57,42 @@ export class FinancesService {
         await this.financeModel.query().deleteById(id).where({user_id: userId});
     }
 
-    async getCategoryStatistics(userId: number){
-        return this.financeModel.query()
+    async getCategoryStatistics(userId: number): Promise<any>{
+        const result = await this.financeModel.query()
             .select('category_id')
             .sum('amount as totalAmount')
             .where('user_id', userId)
             .groupBy('category_id')
+            .withGraphFetched('category');
+            if (result.length === 0) {
+                return { message: 'No records found' };
+              }
+        return result
     }
 
-    async getTotalStatistics(userId: number){
-        return this.financeModel.query()
-            .sum('amount as totalAmount')
+    async getTotalStatistics(userId: number): Promise<any>{
+        const result = await this.financeModel.query()
+            .select('type')
+            .sum('amount as total')
             .where('user_id', userId)
-            .first()
+            .groupBy('type')
+        if (result.length === 0) {
+            return { message: 'No records found' };
     }
+        return result
+    }
+
+    async getMonthlyStatistics(userId: number, month: number, year: number): Promise<any>{
+        const result = await this.financeModel.query()
+            .select('type')
+            .sum('amount as total')
+            .where('user_id', userId)
+            .andWhereRaw('EXTRACT(MONTH FROM date) = ?', [month])
+            .andWhereRaw('EXTRACT(YEAR FROM date) = ?', [year])
+            .groupBy('type')
+        if (result.length === 0) {
+            return { message: 'No records found'};
+        }
+        return result
+    }   
 }
