@@ -9,6 +9,6 @@ export class AuthDto {
   @ApiProperty({example: 'password123', description: 'The password of the user'})
   @IsString()
   @MinLength(6)
-  @MaxLength(255)
+  @MaxLength(16)
   password!: string;
 }

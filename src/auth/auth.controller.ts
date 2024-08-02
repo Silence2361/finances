@@ -2,12 +2,14 @@ import { BadRequestException, Body, Controller, HttpCode, Inject, Post, Validati
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserService } from '../users/users.service';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 
-    constructor(@Inject()private readonly authService: AuthService){}
+    constructor(@Inject()private readonly authService: AuthService,
+                         private readonly usersService: UserService){}
 
     
     @Post('register')
@@ -15,8 +17,8 @@ export class AuthController {
     @ApiResponse({ status: 201, description: 'The user has been successfully created' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     async register(@Body(ValidationPipe) dto: AuthDto) {
-        console.log('Register DTO:', dto);
-        const oldUser = await this.authService.findUser(dto.email);
+        console.log('Register DTO:', { email: dto.email });
+        const oldUser = await this.usersService.findByEmail(dto.email).catch(() => null);
         if (oldUser) {
             console.error('User already registered:', oldUser);
             throw new BadRequestException('Already registered');
@@ -37,7 +39,6 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Successfully logged in.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     async login(@Body(ValidationPipe) dto: AuthDto){
-        console.log('Login DTO:', dto);
         return this.authService.login(dto)
     }
 }

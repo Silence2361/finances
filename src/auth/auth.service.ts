@@ -5,55 +5,34 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthDto } from './dto/auth.dto';
 import { ModelClass } from 'objection';
 import * as bcrypt from 'bcryptjs';
+import { UserService } from '../users/users.service';
+import { IUser } from '../users/interfaces/user.interface';
 
 
 @Injectable()
 export class AuthService {
 
     constructor(@InjectModel(User) private readonly userModel: ModelClass<User>,/*@InjectModel(User) private readonly userModel: ModelClass<User>*/
-                private readonly jwtService: JwtService){}
+                private readonly jwtService: JwtService,
+                private readonly usersService: UserService){}
 
 
-   async register(dto: AuthDto): Promise<User> {
-    const { email, password } = dto;
-    console.log('Registering user:', email);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    try {
-      const user = await this.userModel.query().insert({
-        email,
-        password: hashedPassword,
+   async register(dto: AuthDto): Promise<IUser> {
+      const user = await this.usersService.createUser({
+        email: dto.email,
+        password: dto.password,
         role: 'User',
       });
-      console.log('User registered:', user);
-      return user;
-    } catch (error) {
-      console.error('Error registering user:', error);
-      throw new BadRequestException('Failed to register user');
-    }
-  }
-
-  async findUser(email: string): Promise<User | undefined> {
-    if (!email) {
-      throw new UnauthorizedException('Email must be provided');
-    }
-    console.log('Finding user with email:', email);
-    try {
-      const result = await this.userModel.query().where({ email }).first(); // поиск первой записи в списке пользователей, где соответствуется к указанному значению 
-      console.log('Find user result:', result);
-      return result;
-    } catch (error) {
-      console.error('Error in findUser:', error);
-      throw error;
-    }
+      console.log(`User registered: ${user.email}, ID: ${user.id}`);
+       return user as IUser;
   }
 
 
-  async validateUser(email: string, password: string): Promise<{ email: string, role: string }> {
+  async validateUser(email: string, password: string): Promise<Omit<IUser, 'password'>> {
     if (!email || !password) {
       throw new UnauthorizedException('Email and password must be provided');
     }
-    console.log('Validating user:', email);
-    const user = await this.findUser(email);
+    const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -63,16 +42,14 @@ export class AuthService {
       throw new UnauthorizedException('Wrong Password');
     }
 
-    return { email: user.email, role: user.role };
+    return { id: user.id, email: user.email, role: user.role };
   }
 
 
     async login(dto: AuthDto): Promise<{ access_token: string }> {
         const { email, password } = dto;
-        console.log('Logging in user:', email, 'with password:', password);
         const user = await this.validateUser(email, password);
         const payload = { email: user.email, role: user.role };
-        console.log('Generating JWT token for user:', email);
         return {
           access_token: await this.jwtService.signAsync(payload),
         };
