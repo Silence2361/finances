@@ -1,37 +1,95 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from 'nestjs-objection/dist';
-import { ModelClass } from 'objection';
-import { Category } from './categories.model';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreateCategoryDto } from './dto/create.category.dto';
 import { UpdateCategoryDto } from './dto/update.category.dto';
+import { CategoriesRepository } from '../repositories/category.repository';
+import { ICategory } from './interfaces/category.interface';
 
 @Injectable()
 export class CategoriesService {
+  constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
-
-    constructor(@InjectModel(Category) private readonly categoryModel: ModelClass<Category> ){}
-
-
-    async createCategory(dto: CreateCategoryDto): Promise<Category>{
-        return this.categoryModel.query().insert(dto)
+  async createCategory(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<ICategory> {
+    const existingCategory = await this.categoriesRepository.findCategoryByName(
+      createCategoryDto.name,
+    );
+    if (existingCategory) {
+      throw new ConflictException('Category already exists');
     }
-
-    async getAllCategories(): Promise<Category[]>{
-        return this.categoryModel.query()
+    try {
+      return await this.categoriesRepository.createCategory(createCategoryDto);
+    } catch (e) {
+      throw new InternalServerErrorException('Failed to create category');
     }
+  }
 
-    async updateCategory(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category>{
-        const category  = await this.categoryModel.query().patchAndFetchById(id, updateCategoryDto);
-        if (!category ) {
-            throw new NotFoundException(`Category with id ${id} not found`);
-        }
-        return category ;
+  async findAllCategories(): Promise<ICategory[]> {
+    try {
+      return this.categoriesRepository.findAllCategories();
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new InternalServerErrorException('Failed to get categories');
     }
+  }
 
-    async deleteCategory(id: number): Promise<void> {
-        const deletedCategory = await this.categoryModel.query().deleteById(id)
-        if (!deletedCategory) {
-            throw new NotFoundException(`Category with id ${id} not found`);
-        }
+  async findCategoryById(id: number): Promise<ICategory | null> {
+    try {
+      const category: ICategory | null =
+        await this.categoriesRepository.findCategoryById(id);
+      if (!category) {
+        throw new NotFoundException(`Category with id ${id} not found`);
+      }
+      return category;
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new InternalServerErrorException('Failed to get category');
     }
+  }
+
+  async updateCategoryById(
+    id: number,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<ICategory | null> {
+    try {
+      const category: ICategory | null =
+        await this.categoriesRepository.updateCategoryById(
+          id,
+          updateCategoryDto,
+        );
+      if (!category) {
+        throw new NotFoundException(`Category with id ${id} not found`);
+      }
+      return category;
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new InternalServerErrorException('Failed to update category');
+    }
+  }
+
+  async deleteCategoryById(id: number): Promise<void> {
+    try {
+      const category = await this.categoriesRepository.findCategoryById(id);
+      if (!category) {
+        throw new NotFoundException(`Category with id ${id} not found`);
+      }
+      await this.categoriesRepository.deleteCategoryById(id);
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new InternalServerErrorException('Failed to delete category');
+    }
+  }
 }

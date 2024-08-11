@@ -1,50 +1,86 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { Category } from './categories.model';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UserRequest } from '../auth/interfaces/user-request.interface';
-import { JwtAuthGuard } from '../auth/JwtAuthGuard/jwt-auth.guard';
+import { CreateCategoryDto } from './dto/create.category.dto';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '../jwt/jwt-auth.guard';
 import { UpdateCategoryDto } from './dto/update.category.dto';
+import { ICategory } from './interfaces/category.interface';
 
+@ApiTags('categories')
 @Controller('categories')
+@UseGuards(JwtAuthGuard)
 export class CategoriesController {
+  constructor(private readonly categoriesService: CategoriesService) {}
 
-
-    constructor(private readonly categoriesService: CategoriesService){}
-
-
-    @ApiOperation({ summary: 'Create a new category' })
-    @ApiResponse({ status: 201, description: 'Category created successfully' })
-    @ApiResponse({ status: 400, description: 'Bad Request' })
-    @Post()
-    async createCategory(@Body()dto: CreateCategoryDto): Promise<Category>{
-        return this.categoriesService.createCategory(dto);
-    }
-
-
-    @ApiOperation({ summary: 'Get all categories' })
-    @ApiResponse({ status: 200, description: 'Categories returned successfully' })
-    @Get()
-    async getAllCategories(): Promise <Category[]>{
-        return this.categoriesService.getAllCategories();
-    }
-
+  @Post()
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a category' })
-  @ApiResponse({ status: 200, description: 'Category updated successfully' })
-  async updateCategory(@Param('id') id: number, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesService.updateCategory(id, updateCategoryDto);
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new category' })
+  @ApiResponse({ status: 201, description: 'Category created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @HttpCode(HttpStatus.CREATED)
+  async createCategory(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<ICategory> {
+    return this.categoriesService.createCategory(createCategoryDto);
   }
 
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiResponse({ status: 200, description: 'Categories returned successfully' })
+  @HttpCode(200)
+  async findAllCategories(): Promise<ICategory[]> {
+    return this.categoriesService.findAllCategories();
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Delete(':id')
-    @ApiOperation({summary: 'Delete category'})
-    @ApiResponse({ status: 200, description: 'Category deleted successfully' })
-    async deleteCategory(@Param('id') id: number){
-        await this.categoriesService.deleteCategory(id);
-        return { message: 'Category deleted successfully'}
-    }
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get category by id' })
+  @ApiResponse({ status: 200, description: 'Category returned successfully' })
+  @HttpCode(200)
+  async findCategoryById(@Param('id') id: number): Promise<ICategory | null> {
+    return this.categoriesService.findCategoryById(id);
+  }
+
+  @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a category' })
+  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @HttpCode(200)
+  async updateCategoryById(
+    @Param('id') id: number,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ): Promise<ICategory | null> {
+    return this.categoriesService.updateCategoryById(id, updateCategoryDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete category' })
+  @ApiResponse({ status: 204, description: 'Category deleted successfully' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteCategory(@Param('id') id: number): Promise<void> {
+    await this.categoriesService.deleteCategoryById(id);
+  }
 }

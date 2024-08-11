@@ -10,13 +10,13 @@ export enum FinanceType {
 export class Finance extends Model {
   static tableName = 'finances';
 
-  id!: number;
-  amount!: number;
-  date!: string;
+  id: number;
+  amount: number;
+  date: string;
   description?: string;
-  category_id!: number;
-  user_id!: number;
-  type!: FinanceType;
+  category_id: number;
+  user_id: number;
+  type: FinanceType;
 
   static get relationMappings() {
     return {
@@ -51,7 +51,10 @@ export class Finance extends Model {
         description: { type: ['string', 'null'], maxLength: 300 },
         category_id: { type: 'integer' },
         user_id: { type: 'integer' },
-        type: { type: 'string', enum: [FinanceType.INCOME, FinanceType.EXPENSE] }
+        type: {
+          type: 'string',
+          enum: [FinanceType.INCOME, FinanceType.EXPENSE],
+        },
       },
     };
   }

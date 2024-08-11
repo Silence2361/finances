@@ -1,75 +1,119 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from 'nestjs-objection';
-import { User } from './users.model';
-import { ModelClass } from 'objection';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { updateUserDto } from './dto/update.user.dto';
 import { CreateUserDto } from './dto/create.user.dto';
-import * as bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs';
 import { IUser } from './interfaces/user.interface';
-
+import { UsersRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User) private readonly userModel: ModelClass<User>) {}
+  constructor(private readonly userRepository: UsersRepository) {}
 
-
-  async createUser(createUserDto: CreateUserDto): Promise <IUser>{
-    const {email, password, role} = createUserDto
-    const hashedPassword = await bcrypt.hash(password , 10)
+  async createUser(createUserDto: CreateUserDto): Promise<IUser> {
+    const existingUser = await this.userRepository.findUserByEmail(
+      createUserDto.email,
+    );
+    if (existingUser) {
+      throw new ConflictException('Email already registered');
+    }
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    createUserDto.password = hashedPassword;
     try {
-      const user = await this.userModel.query().insert({
-        email, 
-        password: hashedPassword,
-        role
-      });
-      return user as IUser
-    } catch (e) {
-      throw new BadRequestException('Failed to create user')      
+      const user: IUser = await this.userRepository.createUser(createUserDto);
+      delete user.password;
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create user');
     }
   }
 
-  async findAll(): Promise<IUser[]>{
-    const user =  await this.userModel.query();
-    if(!user){
-      throw new NotFoundException('User not found')
+  async findAllUsers(): Promise<IUser[]> {
+    try {
+      const users: IUser[] = await this.userRepository.findAllUsers();
+      for (let i = 0; i < users.length; i++) {
+        delete users[i].password;
+      }
+      return users;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch users');
     }
-    return user as IUser[]
   }
 
-  async findById(id: number): Promise<IUser> {
-    const user = await this.userModel.query().findById(id);
-    if(!user){
-      throw new NotFoundException (`User with id ${id} not found`)
+  async findUserById(id: number): Promise<IUser | null> {
+    try {
+      const user: IUser | null = await this.userRepository.findUserById(id);
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+      delete user.password;
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to fetch user');
     }
-    return user
   }
 
-  async findByEmail(email: string): Promise<IUser | null> {
-    const user = await this.userModel.query().findOne({ email });
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
+  async findUserByEmail(email: string): Promise<IUser | null> {
+    try {
+      const user: IUser | null =
+        await this.userRepository.findUserByEmail(email);
+      if (!user) {
+        throw new NotFoundException(`User with email ${email} not found`);
+      }
+      delete user.password;
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to fetch user');
     }
-    return user as IUser;
   }
 
- 
-
-  async updateUser(id: number, updateUserDto: updateUserDto): Promise <IUser>{
-    if(updateUserDto.password){
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10)
+  async updateUserById(
+    id: number,
+    updateUserDto: updateUserDto,
+  ): Promise<IUser> {
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
-    const user = await this.userModel.query().patchAndFetchById(id, updateUserDto)
-    if(!user){
-      throw new NotFoundException(`User with email ${id} not found`)
+    try {
+      const user: IUser = await this.userRepository.updateUserById(
+        id,
+        updateUserDto,
+      );
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+      delete user.password;
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to update user');
     }
-    return user as IUser;
   }
 
-  async deleteUser(id: number): Promise <void>{
-    const user = await this.userModel.query().deleteById(id)
-    if(user === 0){
-      throw new NotFoundException(`User with id ${id} not found`)
+  async deleteUserById(id: number): Promise<void> {
+    try {
+      const user = await this.userRepository.findUserById(id);
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+      await this.userRepository.deleteUserById(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to delete user');
     }
-    return console.log('User deleted successfully')
   }
 }

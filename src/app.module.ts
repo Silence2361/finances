@@ -5,7 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FinancesModule } from './finances/finances.module';
-
+import { DatabaseModule } from './repositories/repositories.module';
+import { JwtModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -16,10 +17,6 @@ import { FinancesModule } from './finances/finances.module';
     ObjectionModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        console.log('Database host:', configService.get<string>('DATABASE_HOST'));
-        console.log('Database port:', configService.get<number>('DATABASE_PORT'));
-        console.log('Database user:', configService.get<string>('DATABASE_USER'));
-        console.log('Database name:', configService.get<string>('DATABASE_NAME'));
         return {
           config: {
             client: 'pg',
@@ -35,10 +32,12 @@ import { FinancesModule } from './finances/finances.module';
       },
       inject: [ConfigService],
     }),
+    DatabaseModule,
     AuthModule,
     UsersModule,
     CategoriesModule,
-    FinancesModule
+    FinancesModule,
+    JwtModule,
   ],
   controllers: [],
 })
