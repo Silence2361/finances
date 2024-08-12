@@ -24,7 +24,7 @@ export class CategoriesService {
     }
     try {
       return await this.categoriesRepository.createCategory(createCategoryDto);
-    } catch (e) {
+    } catch (error) {
       throw new InternalServerErrorException('Failed to create category');
     }
   }
@@ -32,9 +32,9 @@ export class CategoriesService {
   async findAllCategories(): Promise<ICategory[]> {
     try {
       return this.categoriesRepository.findAllCategories();
-    } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw e;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
       }
       throw new InternalServerErrorException('Failed to get categories');
     }
@@ -48,9 +48,9 @@ export class CategoriesService {
         throw new NotFoundException(`Category with id ${id} not found`);
       }
       return category;
-    } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw e;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
       }
       throw new InternalServerErrorException('Failed to get category');
     }
@@ -70,9 +70,9 @@ export class CategoriesService {
         throw new NotFoundException(`Category with id ${id} not found`);
       }
       return category;
-    } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw e;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
       }
       throw new InternalServerErrorException('Failed to update category');
     }
@@ -85,9 +85,9 @@ export class CategoriesService {
         throw new NotFoundException(`Category with id ${id} not found`);
       }
       await this.categoriesRepository.deleteCategoryById(id);
-    } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw e;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
       }
       throw new InternalServerErrorException('Failed to delete category');
     }
