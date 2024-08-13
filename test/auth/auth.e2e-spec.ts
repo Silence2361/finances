@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { HttpCode, HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { User } from '../../src/users/users.model';
@@ -33,7 +33,7 @@ describe('AuthController (e2e)', () => {
         email: 'testuser@example.com',
         password: 'testpassword',
       })
-      .expect(201);
+      .expect(HttpStatus.CREATED);
 
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('email', 'testuser@example.com');
@@ -46,7 +46,7 @@ describe('AuthController (e2e)', () => {
         email: 'testuser@example.com',
         password: 'testpassword',
       })
-      .expect(200);
+      .expect(HttpStatus.OK);
 
     expect(response.body).toHaveProperty('access_token');
   });
