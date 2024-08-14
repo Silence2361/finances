@@ -29,12 +29,12 @@ import { UsersListResponseDto } from './dto/users-list-response.dto';
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
@@ -47,8 +47,6 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiOkResponse({ type: [UsersListResponseDto] })
@@ -57,8 +55,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user profile' })
   @ApiResponse({
     status: 200,
@@ -73,8 +69,6 @@ export class UserController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -87,8 +81,6 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 204, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
