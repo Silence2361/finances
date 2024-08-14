@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './users.service';
-import { IUser } from './interfaces/user.interface';
+import { IUser, IUserResponse } from './interfaces/user.interface';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -34,7 +34,9 @@ export class UserController {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<IUser> {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<IUserResponse> {
     return this.userService.createUser(createUserDto);
   }
 

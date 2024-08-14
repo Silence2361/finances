@@ -5,14 +5,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { ICreateUser, IUpdateUser, IUser } from './interfaces/user.interface';
+import {
+  ICreateUser,
+  IUpdateUser,
+  IUser,
+  IUserResponse,
+} from './interfaces/user.interface';
 import { UsersRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async createUser(createUser: ICreateUser): Promise<IUser> {
+  async createUser(createUser: ICreateUser): Promise<IUserResponse> {
     const existingUser = await this.userRepository.findUserByEmail(
       createUser.email,
     );
@@ -26,8 +31,7 @@ export class UserService {
         ...createUser,
         password: hashedPassword,
       });
-      delete user.password;
-      return user;
+      return { id: user.id };
     } catch (error) {
       throw new InternalServerErrorException('Failed to create user');
     }
