@@ -8,6 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserRole } from '../users.model';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -19,6 +20,7 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   @MaxLength(25)
+  @Transform(({ value }) => value.trim())
   password: string;
 
   @ApiProperty()
