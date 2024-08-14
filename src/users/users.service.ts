@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
@@ -22,73 +21,50 @@ export class UserService {
     const existingUser = await this.userRepository.findUserByEmail(
       createUser.email,
     );
-    if (existingUser) {
+    if (!existingUser) {
       throw new ConflictException('Email already registered');
     }
     const hashedPassword = await bcrypt.hash(createUser.password, 10);
 
-    try {
-      const user: IUser = await this.userRepository.createUser({
-        ...createUser,
-        password: hashedPassword,
-      });
-      return { id: user.id };
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create user');
-    }
+    const user: IUser = await this.userRepository.createUser({
+      ...createUser,
+      password: hashedPassword,
+    });
+    return { id: user.id };
   }
 
   async findAllUsers(): Promise<IUserDetails[]> {
-    try {
-      const users: IUser[] = await this.userRepository.findAllUsers();
-      return users.map((user) => ({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      }));
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch users');
-    }
+    const users: IUser[] = await this.userRepository.findAllUsers();
+    return users.map((user) => ({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    }));
   }
 
   async findUserById(id: number): Promise<IUserDetails | null> {
-    try {
-      const user: IUser | null = await this.userRepository.findUserById(id);
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
-      return {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to fetch user');
+    const user: IUser | null = await this.userRepository.findUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
   }
 
   async findUserByEmail(email: string): Promise<IUserDetails | null> {
-    try {
-      const user: IUser | null =
-        await this.userRepository.findUserByEmail(email);
-      if (!user) {
-        throw new NotFoundException(`User with email ${email} not found`);
-      }
-
-      return {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to fetch user');
+    const user: IUser | null = await this.userRepository.findUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
     }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
   }
 
   async updateUserById(
@@ -98,39 +74,26 @@ export class UserService {
     if (updateUser.password) {
       updateUser.password = await bcrypt.hash(updateUser.password, 10);
     }
-    try {
-      const user: IUser | null = await this.userRepository.updateUserById(
-        id,
-        updateUser,
-      );
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
-      return {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to update user');
+
+    const user: IUser | null = await this.userRepository.updateUserById(
+      id,
+      updateUser,
+    );
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
   }
 
   async deleteUserById(id: number): Promise<void> {
-    try {
-      const user = await this.userRepository.findUserById(id);
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
-      await this.userRepository.deleteUserById(id);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to delete user');
+    const user = await this.userRepository.findUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
+    await this.userRepository.deleteUserById(id);
   }
 }
