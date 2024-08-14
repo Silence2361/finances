@@ -4,9 +4,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { updateUserDto } from './dto/update.user.dto';
 import * as bcrypt from 'bcryptjs';
-import { ICreateUser, IUser } from './interfaces/user.interface';
+import { ICreateUser, IUpdateUser, IUser } from './interfaces/user.interface';
 import { UsersRepository } from '../repositories/user.repository';
 
 @Injectable()
@@ -76,17 +75,14 @@ export class UserService {
     }
   }
 
-  async updateUserById(
-    id: number,
-    updateUserDto: updateUserDto,
-  ): Promise<IUser> {
-    if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+  async updateUserById(id: number, updateUser: IUpdateUser): Promise<IUser> {
+    if (updateUser.password) {
+      updateUser.password = await bcrypt.hash(updateUser.password, 10);
     }
     try {
       const user: IUser = await this.userRepository.updateUserById(
         id,
-        updateUserDto,
+        updateUser,
       );
       if (!user) {
         throw new NotFoundException(`User with id ${id} not found`);

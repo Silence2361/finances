@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { User } from '../users/users.model';
 import { ModelClass } from 'objection';
-import { updateUserDto } from '../users/dto/update.user.dto';
-import { ICreateUser, IUser } from '../users/interfaces/user.interface';
+import {
+  ICreateUser,
+  IUpdateUser,
+  IUser,
+} from '../users/interfaces/user.interface';
 
 @Injectable()
 export class UsersRepository {
@@ -32,11 +35,11 @@ export class UsersRepository {
 
   async updateUserById(
     id: number,
-    updateUserDto: updateUserDto,
+    updateUser: IUpdateUser,
   ): Promise<IUser | null> {
     const user: IUser | null = await this.userModel
       .query()
-      .patchAndFetchById(id, updateUserDto);
+      .patchAndFetchById(id, updateUser);
     return user;
   }
 
