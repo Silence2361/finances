@@ -3,8 +3,7 @@ import { InjectModel } from 'nestjs-objection';
 import { User } from '../users/users.model';
 import { ModelClass } from 'objection';
 import { updateUserDto } from '../users/dto/update.user.dto';
-import { CreateUserDto } from '../users/dto/create.user.dto';
-import { IUser } from '../users/interfaces/user.interface';
+import { ICreateUser, IUser } from '../users/interfaces/user.interface';
 
 @Injectable()
 export class UsersRepository {
@@ -12,9 +11,8 @@ export class UsersRepository {
     @InjectModel(User) private readonly userModel: ModelClass<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<IUser> {
-    const user: IUser = await this.userModel.query().insert(createUserDto);
-    return user;
+  async createUser(createUser: ICreateUser): Promise<IUser> {
+    return this.userModel.query().insert(createUser);
   }
 
   async findAllUsers(): Promise<IUser[]> {
