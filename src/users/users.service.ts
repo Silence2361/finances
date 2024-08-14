@@ -9,6 +9,7 @@ import {
   ICreateUser,
   IUpdateUser,
   IUser,
+  IUserDetails,
   IUserResponse,
 } from './interfaces/user.interface';
 import { UsersRepository } from '../repositories/user.repository';
@@ -37,26 +38,30 @@ export class UserService {
     }
   }
 
-  async findAllUsers(): Promise<IUser[]> {
+  async findAllUsers(): Promise<IUserDetails[]> {
     try {
       const users: IUser[] = await this.userRepository.findAllUsers();
-      for (let i = 0; i < users.length; i++) {
-        delete users[i].password;
-      }
-      return users;
+      return users.map((user) => ({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      }));
     } catch (error) {
       throw new InternalServerErrorException('Failed to fetch users');
     }
   }
 
-  async findUserById(id: number): Promise<IUser | null> {
+  async findUserById(id: number): Promise<IUserDetails | null> {
     try {
       const user: IUser | null = await this.userRepository.findUserById(id);
       if (!user) {
         throw new NotFoundException(`User with id ${id} not found`);
       }
-      delete user.password;
-      return user;
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -65,15 +70,19 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<IUser | null> {
+  async findUserByEmail(email: string): Promise<IUserDetails | null> {
     try {
       const user: IUser | null =
         await this.userRepository.findUserByEmail(email);
       if (!user) {
         throw new NotFoundException(`User with email ${email} not found`);
       }
-      delete user.password;
-      return user;
+
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -82,20 +91,26 @@ export class UserService {
     }
   }
 
-  async updateUserById(id: number, updateUser: IUpdateUser): Promise<IUser> {
+  async updateUserById(
+    id: number,
+    updateUser: IUpdateUser,
+  ): Promise<IUserDetails> {
     if (updateUser.password) {
       updateUser.password = await bcrypt.hash(updateUser.password, 10);
     }
     try {
-      const user: IUser = await this.userRepository.updateUserById(
+      const user: IUser | null = await this.userRepository.updateUserById(
         id,
         updateUser,
       );
       if (!user) {
         throw new NotFoundException(`User with id ${id} not found`);
       }
-      delete user.password;
-      return user;
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

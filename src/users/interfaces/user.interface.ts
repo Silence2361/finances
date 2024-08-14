@@ -4,7 +4,7 @@ export interface IUser {
   id: number;
   email: string;
   password: string;
-  role: string;
+  role: UserRole;
 }
 
 export interface ICreateUser {
@@ -21,4 +21,10 @@ export interface IUpdateUser {
 
 export interface IUserResponse {
   id: number;
+}
+
+export interface IUserDetails {
+  id: number;
+  email: string;
+  role: UserRole;
 }
