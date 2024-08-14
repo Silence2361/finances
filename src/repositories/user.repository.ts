@@ -19,28 +19,22 @@ export class UsersRepository {
   }
 
   async findAllUsers(): Promise<IUser[]> {
-    const users: IUser[] = await this.userModel.query();
-    return users;
+    return this.userModel.query();
   }
 
   async findUserById(id: number): Promise<IUser | null> {
-    const user: IUser | null = await this.userModel.query().findById(id);
-    return user;
+    return this.userModel.query().findById(id);
   }
 
   async findUserByEmail(email: string): Promise<IUser | null> {
-    const user: IUser | null = await this.userModel.query().findOne({ email });
-    return user;
+    return this.userModel.query().findOne({ email });
   }
 
   async updateUserById(
     id: number,
     updateUser: IUpdateUser,
   ): Promise<IUser | null> {
-    const user: IUser | null = await this.userModel
-      .query()
-      .patchAndFetchById(id, updateUser);
-    return user;
+    return this.userModel.query().patchAndFetchById(id, updateUser);
   }
 
   async deleteUserById(id: number): Promise<void> {
