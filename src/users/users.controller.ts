@@ -15,12 +15,16 @@ import { UserService } from './users.service';
 import { IUser, IUserResponse } from './interfaces/user.interface';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { updateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { UserCreateResponseDto } from './dto/user-create-response.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -33,10 +37,11 @@ export class UserController {
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiCreatedResponse({ type: UserResponseDto })
   @HttpCode(HttpStatus.CREATED)
   async createUser(
     @Body() createUserDto: CreateUserDto,
-  ): Promise<IUserResponse> {
+  ): Promise<UserCreateResponseDto> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -45,8 +50,8 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
-  @HttpCode(200)
-  async findAll(): Promise<IUser[]> {
+  @ApiOkResponse({ type: [UserResponseDto] })
+  async findAll(): Promise<UserResponseDto[]> {
     return this.userService.findAllUsers();
   }
 
@@ -59,8 +64,8 @@ export class UserController {
     description: 'Successfully returned user profile.',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  @HttpCode(200)
-  async findUserById(@Param('id') id: number): Promise<IUser | null> {
+  @ApiOkResponse({ type: UserResponseDto })
+  async findUserById(@Param('id') id: number): Promise<UserResponseDto | null> {
     return this.userService.findUserById(id);
   }
 
@@ -70,11 +75,11 @@ export class UserController {
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @HttpCode(200)
+  @ApiOkResponse({ type: UserResponseDto })
   async updateUserById(
     @Param('id') id: number,
     @Body() updateUserDto: updateUserDto,
-  ): Promise<IUser | null> {
+  ): Promise<UserResponseDto | null> {
     return this.userService.updateUserById(id, updateUserDto);
   }
 
