@@ -20,9 +20,12 @@ export class UserService {
       throw new ConflictException('Email already registered');
     }
     const hashedPassword = await bcrypt.hash(createUser.password, 10);
-    createUser.password = hashedPassword;
+
     try {
-      const user: IUser = await this.userRepository.createUser(createUser);
+      const user: IUser = await this.userRepository.createUser({
+        ...createUser,
+        password: hashedPassword,
+      });
       delete user.password;
       return user;
     } catch (error) {
