@@ -1,6 +1,6 @@
 import { UserRole } from '../users.model';
 
-export class UserResponseDto {
+export class UsersListResponseDto {
   id: number;
   email: string;
   role: UserRole;
