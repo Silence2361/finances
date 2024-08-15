@@ -1,36 +1,41 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create.category.dto';
-import { UpdateCategoryDto } from './dto/update.category.dto';
 import { CategoriesRepository } from '../repositories/category.repository';
-import { ICategory } from './interfaces/category.interface';
+import {
+  ICategory,
+  ICategoryDetails,
+  ICategoryResponse,
+  ICreateCategory,
+  IUpdateCategory,
+} from './interfaces/category.interface';
 
 @Injectable()
 export class CategoriesService {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
   async createCategory(
-    createCategoryDto: CreateCategoryDto,
-  ): Promise<ICategory> {
+    createCategory: ICreateCategory,
+  ): Promise<ICategoryResponse> {
     const existingCategory = await this.categoriesRepository.findCategoryByName(
-      createCategoryDto.name,
+      createCategory.name,
     );
     if (existingCategory) {
       throw new ConflictException('Category already exists');
     }
 
-    return await this.categoriesRepository.createCategory(createCategoryDto);
+    const category =
+      await this.categoriesRepository.createCategory(createCategory);
+    return { id: category.id };
   }
 
-  async findAllCategories(): Promise<ICategory[]> {
+  async findAllCategories(): Promise<ICategoryDetails[]> {
     return this.categoriesRepository.findAllCategories();
   }
 
-  async findCategoryById(id: number): Promise<ICategory | null> {
+  async findCategoryById(id: number): Promise<ICategoryDetails | null> {
     const category: ICategory | null =
       await this.categoriesRepository.findCategoryById(id);
     if (!category) {
@@ -41,10 +46,10 @@ export class CategoriesService {
 
   async updateCategoryById(
     id: number,
-    updateCategoryDto: UpdateCategoryDto,
-  ): Promise<ICategory | null> {
+    updateCategory: IUpdateCategory,
+  ): Promise<ICategoryDetails | null> {
     const category: ICategory | null =
-      await this.categoriesRepository.updateCategoryById(id, updateCategoryDto);
+      await this.categoriesRepository.updateCategoryById(id, updateCategory);
     if (!category) {
       throw new NotFoundException(`Category with id ${id} not found`);
     }
