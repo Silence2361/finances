@@ -21,25 +21,17 @@ export class FinancesService {
     createFinanceDto: CreateFinanceDto,
     userId: number,
   ): Promise<IFinance> {
-    try {
-      const finance: IFinance = {
-        ...createFinanceDto,
-        user_id: userId,
-        category_id: createFinanceDto.category_id,
-        date: new Date(createFinanceDto.date).toISOString(),
-      };
-      return await this.financesRepository.addFinance(finance);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to add finance');
-    }
+    const finance: IFinance = {
+      ...createFinanceDto,
+      user_id: userId,
+      category_id: createFinanceDto.category_id,
+      date: new Date(createFinanceDto.date).toISOString(),
+    };
+    return await this.financesRepository.addFinance(finance);
   }
 
   async getFinances(userId: number, type?: string): Promise<IFinance[]> {
-    try {
-      return await this.financesRepository.getFinances(userId, type);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to get finances');
-    }
+    return await this.financesRepository.getFinances(userId, type);
   }
 
   async updateFinanceById(
@@ -47,69 +39,49 @@ export class FinancesService {
     updateFinanceDto: UpdateFinanceDto,
     userId: number,
   ): Promise<IFinance | null> {
-    try {
-      const finance = await this.financesRepository.findFinanceById(id);
-      if (!finance) {
-        throw new NotFoundException('Finance record not found');
-      }
-      if (finance.user_id !== userId) {
-        throw new ForbiddenException();
-      }
-      if (updateFinanceDto.category_id) {
-        const categoryExists = await this.categoriesRepository.findCategoryById(
-          updateFinanceDto.category_id,
-        );
-        if (!categoryExists) {
-          throw new NotFoundException(
-            `Category with id ${updateFinanceDto.category_id} not found`,
-          );
-        }
-      }
-
-      const updatedFinance: Partial<IFinance> = {
-        ...updateFinanceDto,
-        user_id: userId,
-        date: updateFinanceDto.date
-          ? new Date(updateFinanceDto.date).toISOString()
-          : finance.date,
-      };
-
-      const result = await this.financesRepository.updateFinanceById(
-        id,
-        updatedFinance,
-      );
-
-      return result;
-    } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to update finance');
+    const finance = await this.financesRepository.findFinanceById(id);
+    if (!finance) {
+      throw new NotFoundException('Finance record not found');
     }
+    if (finance.user_id !== userId) {
+      throw new ForbiddenException();
+    }
+    if (updateFinanceDto.category_id) {
+      const categoryExists = await this.categoriesRepository.findCategoryById(
+        updateFinanceDto.category_id,
+      );
+      if (!categoryExists) {
+        throw new NotFoundException(
+          `Category with id ${updateFinanceDto.category_id} not found`,
+        );
+      }
+    }
+
+    const updatedFinance: Partial<IFinance> = {
+      ...updateFinanceDto,
+      user_id: userId,
+      date: updateFinanceDto.date
+        ? new Date(updateFinanceDto.date).toISOString()
+        : finance.date,
+    };
+
+    const result = await this.financesRepository.updateFinanceById(
+      id,
+      updatedFinance,
+    );
+
+    return result;
   }
 
   async removeFinanceById(id: number, userId: number): Promise<void> {
-    try {
-      const finance = await this.financesRepository.findFinanceById(id);
-      if (!finance) {
-        throw new NotFoundException('Finance record not found');
-      }
-      if (finance.user_id !== userId) {
-        throw new ForbiddenException();
-      }
-      await this.financesRepository.removeFinanceById(id, userId);
-    } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to remove finance');
+    const finance = await this.financesRepository.findFinanceById(id);
+    if (!finance) {
+      throw new NotFoundException('Finance record not found');
     }
+    if (finance.user_id !== userId) {
+      throw new ForbiddenException();
+    }
+    await this.financesRepository.removeFinanceById(id, userId);
   }
 
   async getCategoryStatistics(userId: number): Promise<any> {
@@ -128,15 +100,11 @@ export class FinancesService {
   }
 
   async getTotalStatistics(userId: number): Promise<any> {
-    try {
-      const result = await this.financesRepository.getTotalStatistics(userId);
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to get total statistics');
+    const result = await this.financesRepository.getTotalStatistics(userId);
+    if (result.length === 0) {
+      throw new NotFoundException('No records found');
     }
+    return result;
   }
 
   async getMonthlyStatistics(
@@ -144,20 +112,14 @@ export class FinancesService {
     month: number,
     year: number,
   ): Promise<any> {
-    try {
-      const result = await this.financesRepository.getMonthlyStatistics(
-        userId,
-        month,
-        year,
-      );
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to get monthly statistics',
-      );
+    const result = await this.financesRepository.getMonthlyStatistics(
+      userId,
+      month,
+      year,
+    );
+    if (result.length === 0) {
+      throw new NotFoundException('No records found');
     }
+    return result;
   }
 }
