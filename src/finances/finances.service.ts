@@ -4,8 +4,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateFinanceDto } from './dto/create.finances.dto';
-import { UpdateFinanceDto } from './dto/update.finance.dto';
+import { CreateFinanceDto } from './dto/create-finances.dto';
+import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { FinancesRepository } from '../repositories/finance.repository';
 import { IFinance } from './interfaces/finance.interface';
 import { CategoriesRepository } from '../repositories/category.repository';
@@ -17,7 +17,7 @@ export class FinancesService {
     private readonly categoriesRepository: CategoriesRepository,
   ) {}
 
-  async addFinance(
+  async createFinance(
     createFinanceDto: CreateFinanceDto,
     userId: number,
   ): Promise<IFinance> {
@@ -27,11 +27,11 @@ export class FinancesService {
       category_id: createFinanceDto.category_id,
       date: new Date(createFinanceDto.date).toISOString(),
     };
-    return await this.financesRepository.addFinance(finance);
+    return await this.financesRepository.createFinance(finance);
   }
 
-  async getFinances(userId: number, type?: string): Promise<IFinance[]> {
-    return await this.financesRepository.getFinances(userId, type);
+  async findFinances(userId: number, type?: string): Promise<IFinance[]> {
+    return await this.financesRepository.findFinances(userId, type);
   }
 
   async updateFinanceById(
@@ -73,7 +73,7 @@ export class FinancesService {
     return result;
   }
 
-  async removeFinanceById(id: number, userId: number): Promise<void> {
+  async deleteFinanceById(id: number, userId: number): Promise<void> {
     const finance = await this.financesRepository.findFinanceById(id);
     if (!finance) {
       throw new NotFoundException('Finance record not found');
@@ -81,13 +81,13 @@ export class FinancesService {
     if (finance.user_id !== userId) {
       throw new ForbiddenException();
     }
-    await this.financesRepository.removeFinanceById(id, userId);
+    await this.financesRepository.deleteFinanceById(id, userId);
   }
 
-  async getCategoryStatistics(userId: number): Promise<any> {
+  async findCategoryStatistics(userId: number): Promise<any> {
     try {
       const result =
-        await this.financesRepository.getCategoryStatistics(userId);
+        await this.financesRepository.findCategoryStatistics(userId);
       if (result.length === 0) {
         throw new NotFoundException('No records found');
       }
@@ -99,20 +99,20 @@ export class FinancesService {
     }
   }
 
-  async getTotalStatistics(userId: number): Promise<any> {
-    const result = await this.financesRepository.getTotalStatistics(userId);
+  async findTotalStatistics(userId: number): Promise<any> {
+    const result = await this.financesRepository.findTotalStatistics(userId);
     if (result.length === 0) {
       throw new NotFoundException('No records found');
     }
     return result;
   }
 
-  async getMonthlyStatistics(
+  async findMonthlyStatistics(
     userId: number,
     month: number,
     year: number,
   ): Promise<any> {
-    const result = await this.financesRepository.getMonthlyStatistics(
+    const result = await this.financesRepository.findMonthlyStatistics(
       userId,
       month,
       year,

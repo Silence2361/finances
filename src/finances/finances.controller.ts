@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { FinancesService } from './finances.service';
 import { FinanceType } from './finances.model';
-import { CreateFinanceDto } from './dto/create.finances.dto';
+import { CreateFinanceDto } from './dto/create-finances.dto';
 import { UserRequest } from '../users/interfaces/user-request.interface';
 import { JwtAuthGuard } from '../jwt/jwt-auth.guard';
 import {
@@ -24,7 +24,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateFinanceDto } from './dto/update.finance.dto';
+import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { IFinance } from './interfaces/finance.interface';
 
 @ApiTags('finances')
@@ -42,11 +42,11 @@ export class FinancesController {
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @HttpCode(HttpStatus.CREATED)
-  async addFinance(
+  async createFinance(
     @Body() createFinanceDto: CreateFinanceDto,
     @Req() req: Request & UserRequest,
   ): Promise<IFinance> {
-    return this.financesService.addFinance(createFinanceDto, req.user.id);
+    return this.financesService.createFinance(createFinanceDto, req.user.id);
   }
 
   @Get()
@@ -56,11 +56,11 @@ export class FinancesController {
     description: 'Finance records returned successfully',
   })
   @HttpCode(200)
-  async getFinances(
+  async findFinances(
     @Query('type') type: FinanceType,
     @Request() req: UserRequest,
   ): Promise<IFinance[]> {
-    return this.financesService.getFinances(req.user.id, type);
+    return this.financesService.findFinances(req.user.id, type);
   }
 
   @Put(':id')
@@ -89,19 +89,19 @@ export class FinancesController {
     description: 'Finance record deleted successfully',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async removeFinanceById(
+  async deleteFinanceById(
     @Param('id') id: number,
     @Req() req: UserRequest,
   ): Promise<void> {
-    await this.financesService.removeFinanceById(id, req.user.id);
+    await this.financesService.deleteFinanceById(id, req.user.id);
   }
 
   @Get('statistics/category')
   @ApiOperation({ summary: 'Get statisctics by category' })
   @ApiResponse({ status: 200, description: 'Return statistics by category' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getCategoryStatistics(@Req() req: UserRequest): Promise<any> {
-    return this.financesService.getCategoryStatistics(req.user.id);
+  async findCategoryStatistics(@Req() req: UserRequest): Promise<any> {
+    return this.financesService.findCategoryStatistics(req.user.id);
   }
 
   @Get('statistics/total')
@@ -109,8 +109,8 @@ export class FinancesController {
   @ApiResponse({ status: 200, description: 'Return total statistics ' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @HttpCode(200)
-  async getTotalStatistics(@Req() req: UserRequest): Promise<any> {
-    return this.financesService.getTotalStatistics(req.user.id);
+  async findTotalStatistics(@Req() req: UserRequest): Promise<any> {
+    return this.financesService.findTotalStatistics(req.user.id);
   }
 
   @Get('statistics/monthly')
@@ -118,11 +118,11 @@ export class FinancesController {
   @ApiResponse({ status: 200, description: 'Return monthly statistics' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @HttpCode(200)
-  async getMonthlyStatistics(
+  async findMonthlyStatistics(
     @Req() req: UserRequest,
     @Query('month') month: number,
     @Query('year') year: number,
   ): Promise<any> {
-    return this.financesService.getMonthlyStatistics(req.user.id, month, year);
+    return this.financesService.findMonthlyStatistics(req.user.id, month, year);
   }
 }
