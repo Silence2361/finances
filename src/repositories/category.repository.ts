@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection/dist';
 import { ModelClass } from 'objection';
 import { Category } from '../categories/categories.model';
-import { CreateCategoryDto } from '../categories/dto/create.category.dto';
+import { CreateCategoryDto } from '../categories/dto/create-category.dto';
 import { UpdateCategoryDto } from '../categories/dto/update.category.dto';
 import { ICategory } from '../categories/interfaces/category.interface';
 
