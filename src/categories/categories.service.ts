@@ -1,95 +1,66 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create.category.dto';
-import { UpdateCategoryDto } from './dto/update.category.dto';
 import { CategoriesRepository } from '../repositories/category.repository';
-import { ICategory } from './interfaces/category.interface';
+import {
+  ICategory,
+  ICategoryDetails,
+  ICategoryResponse,
+  ICreateCategory,
+  IUpdateCategory,
+} from './interfaces/category.interface';
 
 @Injectable()
 export class CategoriesService {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
   async createCategory(
-    createCategoryDto: CreateCategoryDto,
-  ): Promise<ICategory> {
+    createCategory: ICreateCategory,
+  ): Promise<ICategoryResponse> {
     const existingCategory = await this.categoriesRepository.findCategoryByName(
-      createCategoryDto.name,
+      createCategory.name,
     );
     if (existingCategory) {
       throw new ConflictException('Category already exists');
     }
-    try {
-      return await this.categoriesRepository.createCategory(createCategoryDto);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create category');
-    }
+
+    const category =
+      await this.categoriesRepository.createCategory(createCategory);
+    return { id: category.id };
   }
 
-  async findAllCategories(): Promise<ICategory[]> {
-    try {
-      return this.categoriesRepository.findAllCategories();
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to get categories');
-    }
+  async findAllCategories(): Promise<ICategoryDetails[]> {
+    return this.categoriesRepository.findAllCategories();
   }
 
-  async findCategoryById(id: number): Promise<ICategory | null> {
-    try {
-      const category: ICategory | null =
-        await this.categoriesRepository.findCategoryById(id);
-      if (!category) {
-        throw new NotFoundException(`Category with id ${id} not found`);
-      }
-      return category;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to get category');
+  async findCategoryById(id: number): Promise<ICategoryDetails | null> {
+    const category: ICategory | null =
+      await this.categoriesRepository.findCategoryById(id);
+    if (!category) {
+      throw new NotFoundException(`Category with id ${id} not found`);
     }
+    return category;
   }
 
   async updateCategoryById(
     id: number,
-    updateCategoryDto: UpdateCategoryDto,
-  ): Promise<ICategory | null> {
-    try {
-      const category: ICategory | null =
-        await this.categoriesRepository.updateCategoryById(
-          id,
-          updateCategoryDto,
-        );
-      if (!category) {
-        throw new NotFoundException(`Category with id ${id} not found`);
-      }
-      return category;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to update category');
+    updateCategory: IUpdateCategory,
+  ): Promise<ICategoryDetails | null> {
+    const category: ICategory | null =
+      await this.categoriesRepository.updateCategoryById(id, updateCategory);
+    if (!category) {
+      throw new NotFoundException(`Category with id ${id} not found`);
     }
+    return category;
   }
 
   async deleteCategoryById(id: number): Promise<void> {
-    try {
-      const category = await this.categoriesRepository.findCategoryById(id);
-      if (!category) {
-        throw new NotFoundException(`Category with id ${id} not found`);
-      }
-      await this.categoriesRepository.deleteCategoryById(id);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to delete category');
+    const category = await this.categoriesRepository.findCategoryById(id);
+    if (!category) {
+      throw new NotFoundException(`Category with id ${id} not found`);
     }
+    await this.categoriesRepository.deleteCategoryById(id);
   }
 }
