@@ -5,6 +5,7 @@ import { UpdateFinanceDto } from '../finances/dto/update-finance.dto';
 import {
   ICreateFinance,
   IFinance,
+  IUpdateFinance,
 } from '../finances/interfaces/finance.interface';
 import { Finance } from '../finances/finances.model';
 
@@ -44,11 +45,11 @@ export class FinancesRepository {
 
   async updateFinanceById(
     id: number,
-    updateFinanceDto: UpdateFinanceDto,
+    updateFinance: IUpdateFinance,
   ): Promise<IFinance | null> {
     const finance: IFinance | null = await this.financeModel
       .query()
-      .patchAndFetchById(id, updateFinanceDto)
+      .patchAndFetchById(id, updateFinance)
       .withGraphFetched('category');
     return finance;
   }
