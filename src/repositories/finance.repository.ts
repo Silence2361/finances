@@ -60,10 +60,10 @@ export class FinancesRepository {
   async findCategoryStatistics(userId: number): Promise<any> {
     return this.financeModel
       .query()
-      .select('category_id')
+      .select('categoryId')
       .sum('amount as totalAmount')
-      .where('user_id', userId)
-      .groupBy('category_id')
+      .where('userId', userId)
+      .groupBy('categoryId')
       .withGraphFetched('category');
   }
 
@@ -72,7 +72,7 @@ export class FinancesRepository {
       .query()
       .select('type')
       .sum('amount as total')
-      .where('user_id', userId)
+      .where('userId', userId)
       .groupBy('type');
   }
 
@@ -85,7 +85,7 @@ export class FinancesRepository {
       .query()
       .select('type')
       .sum('amount as total')
-      .where('user_id', userId)
+      .where('userId', userId)
       .andWhereRaw('EXTRACT(MONTH FROM date) = ?', [month])
       .andWhereRaw('EXTRACT(YEAR FROM date) = ?', [year])
       .groupBy('type');
