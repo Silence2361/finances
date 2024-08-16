@@ -4,10 +4,16 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateFinanceDto } from './dto/create-finances.dto';
-import { UpdateFinanceDto } from './dto/update-finance.dto';
+
 import { FinancesRepository } from '../repositories/finance.repository';
-import { IFinance } from './interfaces/finance.interface';
+import {
+  ICreateFinance,
+  ICreateFinanceResponse,
+  IFinance,
+  IFinanceDetails,
+  IFindFinancesResponse,
+  IUpdateFinance,
+} from './interfaces/finance.interface';
 import { CategoriesRepository } from '../repositories/category.repository';
 
 @Injectable()
@@ -18,25 +24,30 @@ export class FinancesService {
   ) {}
 
   async createFinance(
-    createFinanceDto: CreateFinanceDto,
+    createFinance: ICreateFinance,
     userId: number,
-  ): Promise<IFinance> {
-    const finance: IFinance = {
-      ...createFinanceDto,
+  ): Promise<ICreateFinanceResponse> {
+    const finance: ICreateFinance = {
+      ...createFinance,
       user_id: userId,
-      category_id: createFinanceDto.category_id,
-      date: new Date(createFinanceDto.date).toISOString(),
+      date: new Date(createFinance.date).toISOString(),
     };
-    return await this.financesRepository.createFinance(finance);
+
+    const createdFinance = await this.financesRepository.createFinance(finance);
+    return { id: createdFinance.id };
   }
 
-  async findFinances(userId: number, type?: string): Promise<IFinance[]> {
-    return await this.financesRepository.findFinances(userId, type);
+  async findFinances(
+    userId: number,
+    type?: string,
+  ): Promise<IFindFinancesResponse> {
+    const finances = await this.financesRepository.findFinances(userId, type);
+    return { finances };
   }
 
   async updateFinanceById(
     id: number,
-    updateFinanceDto: UpdateFinanceDto,
+    updateFinance: IUpdateFinance,
     userId: number,
   ): Promise<IFinance | null> {
     const finance = await this.financesRepository.findFinanceById(id);
@@ -46,22 +57,22 @@ export class FinancesService {
     if (finance.user_id !== userId) {
       throw new ForbiddenException();
     }
-    if (updateFinanceDto.category_id) {
+    if (updateFinance.category_id) {
       const categoryExists = await this.categoriesRepository.findCategoryById(
-        updateFinanceDto.category_id,
+        updateFinance.category_id,
       );
       if (!categoryExists) {
         throw new NotFoundException(
-          `Category with id ${updateFinanceDto.category_id} not found`,
+          `Category with id ${updateFinance.category_id} not found`,
         );
       }
     }
 
     const updatedFinance: Partial<IFinance> = {
-      ...updateFinanceDto,
+      ...updateFinance,
       user_id: userId,
-      date: updateFinanceDto.date
-        ? new Date(updateFinanceDto.date).toISOString()
+      date: updateFinance.date
+        ? new Date(updateFinance.date).toISOString()
         : finance.date,
     };
 

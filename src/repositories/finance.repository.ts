@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { ModelClass } from 'objection';
 import { UpdateFinanceDto } from '../finances/dto/update-finance.dto';
-import { IFinance } from '../finances/interfaces/finance.interface';
+import {
+  ICreateFinance,
+  IFinance,
+} from '../finances/interfaces/finance.interface';
 import { Finance } from '../finances/finances.model';
-import { CreateFinanceDto } from '../finances/dto/create-finances.dto';
 
 @Injectable()
 export class FinancesRepository {
@@ -12,10 +14,10 @@ export class FinancesRepository {
     @InjectModel(Finance) private readonly financeModel: ModelClass<Finance>,
   ) {}
 
-  async createFinance(createFinanceDto: CreateFinanceDto): Promise<IFinance> {
+  async createFinance(createFinance: ICreateFinance): Promise<IFinance> {
     const newFinance: IFinance = await this.financeModel
       .query()
-      .insert(createFinanceDto);
+      .insert(createFinance);
     return newFinance;
   }
 

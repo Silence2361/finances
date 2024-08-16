@@ -25,7 +25,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
-import { IFinance } from './interfaces/finance.interface';
+import { CreateFinanceResponseDto } from './dto/create-finance-response.dto';
+import { FindFinancesQueryDto } from './dto/find-finances-query.dto';
+import { UpdateFinanceResponseDto } from './dto/update-finance-response.dto';
+import {
+  CategoryStatisticsResponseDto,
+  MonthlyStatisticsResponseDto,
+  TotalStatisticsResponseDto,
+} from './dto/statistics-response.dto';
+import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
+import { UserId } from '../common/decorators/user-id.decorator';
+import { ICreateFinance } from './interfaces/finance.interface';
 
 @ApiTags('finances')
 @Controller('finances')
@@ -44,9 +54,9 @@ export class FinancesController {
   @HttpCode(HttpStatus.CREATED)
   async createFinance(
     @Body() createFinanceDto: CreateFinanceDto,
-    @Req() req: Request & UserRequest,
-  ): Promise<IFinance> {
-    return this.financesService.createFinance(createFinanceDto, req.user.id);
+    @UserId() userId: number,
+  ): Promise<CreateFinanceResponseDto> {
+    return this.financesService.createFinance(createFinanceDto, userId);
   }
 
   @Get()
@@ -57,10 +67,10 @@ export class FinancesController {
   })
   @HttpCode(200)
   async findFinances(
-    @Query('type') type: FinanceType,
-    @Request() req: UserRequest,
-  ): Promise<IFinance[]> {
-    return this.financesService.findFinances(req.user.id, type);
+    @Query('type') query: FindFinancesQueryDto,
+    @UserId() userId: number,
+  ): Promise<FindFinancesListResponseDto> {
+    return this.financesService.findFinances(userId, query.type);
   }
 
   @Put(':id')
@@ -74,7 +84,7 @@ export class FinancesController {
     @Param('id') id: number,
     @Body() updateFinanceDto: UpdateFinanceDto,
     @Req() req: UserRequest,
-  ): Promise<IFinance | null> {
+  ): Promise<UpdateFinanceResponseDto | null> {
     return this.financesService.updateFinanceById(
       id,
       updateFinanceDto,
@@ -100,7 +110,9 @@ export class FinancesController {
   @ApiOperation({ summary: 'Get statisctics by category' })
   @ApiResponse({ status: 200, description: 'Return statistics by category' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async findCategoryStatistics(@Req() req: UserRequest): Promise<any> {
+  async findCategoryStatistics(
+    @Req() req: UserRequest,
+  ): Promise<CategoryStatisticsResponseDto> {
     return this.financesService.findCategoryStatistics(req.user.id);
   }
 
@@ -109,7 +121,9 @@ export class FinancesController {
   @ApiResponse({ status: 200, description: 'Return total statistics ' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @HttpCode(200)
-  async findTotalStatistics(@Req() req: UserRequest): Promise<any> {
+  async findTotalStatistics(
+    @Req() req: UserRequest,
+  ): Promise<TotalStatisticsResponseDto> {
     return this.financesService.findTotalStatistics(req.user.id);
   }
 
@@ -122,7 +136,7 @@ export class FinancesController {
     @Req() req: UserRequest,
     @Query('month') month: number,
     @Query('year') year: number,
-  ): Promise<any> {
+  ): Promise<MonthlyStatisticsResponseDto> {
     return this.financesService.findMonthlyStatistics(req.user.id, month, year);
   }
 }
