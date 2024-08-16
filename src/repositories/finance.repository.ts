@@ -22,17 +22,16 @@ export class FinancesRepository {
   }
 
   async findFinances(userId: number, type?: string): Promise<IFinance[]> {
-    const filter: FinanceFilter = { user_id: userId };
-
-    if (type) filter.type = type;
-
     const query = this.financeModel
       .query()
-      .where(filter)
+      .where({ user_id: userId })
       .withGraphFetched('category');
 
-    const finances: IFinance[] = await query;
-    return finances;
+    if (type) {
+      query.where({ type });
+    }
+
+    return query;
   }
 
   async findFinanceById(id: number): Promise<IFinance | null> {
@@ -54,8 +53,8 @@ export class FinancesRepository {
     return finance;
   }
 
-  async deleteFinanceById(id: number, userId: number): Promise<void> {
-    await this.financeModel.query().deleteById(id).where({ user_id: userId });
+  async deleteFinanceById(id: number): Promise<void> {
+    await this.financeModel.query().deleteById(id);
   }
 
   async findCategoryStatistics(userId: number): Promise<any> {

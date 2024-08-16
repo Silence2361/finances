@@ -1,16 +1,15 @@
 import {
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 
 import { FinancesRepository } from '../repositories/finance.repository';
 import {
+  ICategoryStatistics,
   ICreateFinance,
   ICreateFinanceResponse,
   IFinance,
-  IFinanceDetails,
   IFindFinancesResponse,
   IUpdateFinance,
 } from './interfaces/finance.interface';
@@ -92,30 +91,15 @@ export class FinancesService {
     if (finance.user_id !== userId) {
       throw new ForbiddenException();
     }
-    await this.financesRepository.deleteFinanceById(id, userId);
+    await this.financesRepository.deleteFinanceById(id);
   }
 
-  async findCategoryStatistics(userId: number): Promise<any> {
-    try {
-      const result =
-        await this.financesRepository.findCategoryStatistics(userId);
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to get category statistics',
-      );
-    }
+  async findCategoryStatistics(userId: number): Promise<ICategoryStatistics> {
+    return this.financesRepository.findCategoryStatistics(userId);
   }
 
   async findTotalStatistics(userId: number): Promise<any> {
-    const result = await this.financesRepository.findTotalStatistics(userId);
-    if (result.length === 0) {
-      throw new NotFoundException('No records found');
-    }
-    return result;
+    return this.financesRepository.findTotalStatistics(userId);
   }
 
   async findMonthlyStatistics(
@@ -123,14 +107,6 @@ export class FinancesService {
     month: number,
     year: number,
   ): Promise<any> {
-    const result = await this.financesRepository.findMonthlyStatistics(
-      userId,
-      month,
-      year,
-    );
-    if (result.length === 0) {
-      throw new NotFoundException('No records found');
-    }
-    return result;
+    return this.financesRepository.findMonthlyStatistics(userId, month, year);
   }
 }

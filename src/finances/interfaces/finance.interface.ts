@@ -47,3 +47,18 @@ export interface IUpdateFinance {
   category_id?: number;
   type?: FinanceType;
 }
+
+export interface ICategoryStatistics {
+  category_id: number;
+  totalAmount: number;
+}
+
+export interface ITotalStatistics {
+  type: string;
+  total: number;
+}
+
+export interface IMonthlyStatistics {
+  type: string;
+  total: number;
+}
