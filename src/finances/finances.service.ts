@@ -1,13 +1,18 @@
 import {
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateFinanceDto } from './dto/create.finances.dto';
-import { UpdateFinanceDto } from './dto/update.finance.dto';
+
 import { FinancesRepository } from '../repositories/finance.repository';
-import { IFinance } from './interfaces/finance.interface';
+import {
+  ICategoryStatistics,
+  ICreateFinance,
+  ICreateFinanceResponse,
+  IFinance,
+  IFindFinancesResponse,
+  IUpdateFinance,
+} from './interfaces/finance.interface';
 import { CategoriesRepository } from '../repositories/category.repository';
 
 @Injectable()
@@ -17,147 +22,99 @@ export class FinancesService {
     private readonly categoriesRepository: CategoriesRepository,
   ) {}
 
-  async addFinance(
-    createFinanceDto: CreateFinanceDto,
+  async createFinance(
+    createFinance: ICreateFinance,
     userId: number,
-  ): Promise<IFinance> {
-    try {
-      const finance: IFinance = {
-        ...createFinanceDto,
-        user_id: userId,
-        category_id: createFinanceDto.category_id,
-        date: new Date(createFinanceDto.date).toISOString(),
-      };
-      return await this.financesRepository.addFinance(finance);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to add finance');
+  ): Promise<ICreateFinanceResponse> {
+    const finance: ICreateFinance = {
+      ...createFinance,
+      user_id: userId,
+      date: new Date(createFinance.date).toISOString(),
+    };
+    const categoryExists = await this.categoriesRepository.findCategoryById(
+      createFinance.category_id,
+    );
+    if (!categoryExists) {
+      throw new NotFoundException(
+        `Category with id ${createFinance.category_id} not found`,
+      );
     }
+
+    const createdFinance = await this.financesRepository.createFinance(finance);
+    return { id: createdFinance.id };
   }
 
-  async getFinances(userId: number, type?: string): Promise<IFinance[]> {
-    try {
-      return await this.financesRepository.getFinances(userId, type);
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to get finances');
-    }
+  async findFinances(
+    userId: number,
+    type?: string,
+  ): Promise<IFindFinancesResponse> {
+    const finances = await this.financesRepository.findFinances(userId, type);
+    return { finances };
   }
 
   async updateFinanceById(
     id: number,
-    updateFinanceDto: UpdateFinanceDto,
+    updateFinance: IUpdateFinance,
     userId: number,
   ): Promise<IFinance | null> {
-    try {
-      const finance = await this.financesRepository.findFinanceById(id);
-      if (!finance) {
-        throw new NotFoundException('Finance record not found');
-      }
-      if (finance.user_id !== userId) {
-        throw new ForbiddenException();
-      }
-      if (updateFinanceDto.category_id) {
-        const categoryExists = await this.categoriesRepository.findCategoryById(
-          updateFinanceDto.category_id,
+    const finance = await this.financesRepository.findFinanceById(id);
+    if (!finance) {
+      throw new NotFoundException('Finance record not found');
+    }
+    if (finance.user_id !== userId) {
+      throw new ForbiddenException();
+    }
+    if (updateFinance.category_id) {
+      const categoryExists = await this.categoriesRepository.findCategoryById(
+        updateFinance.category_id,
+      );
+      if (!categoryExists) {
+        throw new NotFoundException(
+          `Category with id ${updateFinance.category_id} not found`,
         );
-        if (!categoryExists) {
-          throw new NotFoundException(
-            `Category with id ${updateFinanceDto.category_id} not found`,
-          );
-        }
       }
-
-      const updatedFinance: Partial<IFinance> = {
-        ...updateFinanceDto,
-        user_id: userId,
-        date: updateFinanceDto.date
-          ? new Date(updateFinanceDto.date).toISOString()
-          : finance.date,
-      };
-
-      const result = await this.financesRepository.updateFinanceById(
-        id,
-        updatedFinance,
-      );
-
-      return result;
-    } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to update finance');
     }
+
+    const updatedFinance: Partial<IFinance> = {
+      ...updateFinance,
+      user_id: userId,
+      date: updateFinance.date
+        ? new Date(updateFinance.date).toISOString()
+        : finance.date,
+    };
+
+    const result = await this.financesRepository.updateFinanceById(
+      id,
+      updatedFinance,
+    );
+
+    return result;
   }
 
-  async removeFinanceById(id: number, userId: number): Promise<void> {
-    try {
-      const finance = await this.financesRepository.findFinanceById(id);
-      if (!finance) {
-        throw new NotFoundException('Finance record not found');
-      }
-      if (finance.user_id !== userId) {
-        throw new ForbiddenException();
-      }
-      await this.financesRepository.removeFinanceById(id, userId);
-    } catch (error) {
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException
-      ) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to remove finance');
+  async deleteFinanceById(id: number, userId: number): Promise<void> {
+    const finance = await this.financesRepository.findFinanceById(id);
+    if (!finance) {
+      throw new NotFoundException('Finance record not found');
     }
+    if (finance.user_id !== userId) {
+      throw new ForbiddenException();
+    }
+    await this.financesRepository.deleteFinanceById(id);
   }
 
-  async getCategoryStatistics(userId: number): Promise<any> {
-    try {
-      const result =
-        await this.financesRepository.getCategoryStatistics(userId);
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to get category statistics',
-      );
-    }
+  async findCategoryStatistics(userId: number): Promise<ICategoryStatistics> {
+    return this.financesRepository.findCategoryStatistics(userId);
   }
 
-  async getTotalStatistics(userId: number): Promise<any> {
-    try {
-      const result = await this.financesRepository.getTotalStatistics(userId);
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to get total statistics');
-    }
+  async findTotalStatistics(userId: number): Promise<any> {
+    return this.financesRepository.findTotalStatistics(userId);
   }
 
-  async getMonthlyStatistics(
+  async findMonthlyStatistics(
     userId: number,
     month: number,
     year: number,
   ): Promise<any> {
-    try {
-      const result = await this.financesRepository.getMonthlyStatistics(
-        userId,
-        month,
-        year,
-      );
-      if (result.length === 0) {
-        throw new NotFoundException('No records found');
-      }
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to get monthly statistics',
-      );
-    }
+    return this.financesRepository.findMonthlyStatistics(userId, month, year);
   }
 }

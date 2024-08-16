@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { ModelClass } from 'objection';
-import { UpdateFinanceDto } from '../finances/dto/update.finance.dto';
-import { IFinance } from '../finances/interfaces/finance.interface';
+import { UpdateFinanceDto } from '../finances/dto/update-finance.dto';
+import {
+  ICreateFinance,
+  IFinance,
+} from '../finances/interfaces/finance.interface';
 import { Finance } from '../finances/finances.model';
-import { CreateFinanceDto } from '../finances/dto/create.finances.dto';
 
 @Injectable()
 export class FinancesRepository {
@@ -12,25 +14,24 @@ export class FinancesRepository {
     @InjectModel(Finance) private readonly financeModel: ModelClass<Finance>,
   ) {}
 
-  async addFinance(createFinanceDto: CreateFinanceDto): Promise<IFinance> {
+  async createFinance(createFinance: ICreateFinance): Promise<IFinance> {
     const newFinance: IFinance = await this.financeModel
       .query()
-      .insert(createFinanceDto);
+      .insert(createFinance);
     return newFinance;
   }
 
-  async getFinances(userId: number, type?: string): Promise<IFinance[]> {
-    const filter: FinanceFilter = { user_id: userId };
-
-    if (type) filter.type = type;
-
+  async findFinances(userId: number, type?: string): Promise<IFinance[]> {
     const query = this.financeModel
       .query()
-      .where(filter)
+      .where({ user_id: userId })
       .withGraphFetched('category');
 
-    const finances: IFinance[] = await query;
-    return finances;
+    if (type) {
+      query.where({ type });
+    }
+
+    return query;
   }
 
   async findFinanceById(id: number): Promise<IFinance | null> {
@@ -52,11 +53,11 @@ export class FinancesRepository {
     return finance;
   }
 
-  async removeFinanceById(id: number, userId: number): Promise<void> {
-    await this.financeModel.query().deleteById(id).where({ user_id: userId });
+  async deleteFinanceById(id: number): Promise<void> {
+    await this.financeModel.query().deleteById(id);
   }
 
-  async getCategoryStatistics(userId: number): Promise<any> {
+  async findCategoryStatistics(userId: number): Promise<any> {
     return this.financeModel
       .query()
       .select('category_id')
@@ -66,7 +67,7 @@ export class FinancesRepository {
       .withGraphFetched('category');
   }
 
-  async getTotalStatistics(userId: number): Promise<any> {
+  async findTotalStatistics(userId: number): Promise<any> {
     return this.financeModel
       .query()
       .select('type')
@@ -75,7 +76,7 @@ export class FinancesRepository {
       .groupBy('type');
   }
 
-  async getMonthlyStatistics(
+  async findMonthlyStatistics(
     userId: number,
     month: number,
     year: number,

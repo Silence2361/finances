@@ -9,23 +9,29 @@ import {
   Post,
   Put,
   Query,
-  Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { FinancesService } from './finances.service';
-import { FinanceType } from './finances.model';
-import { CreateFinanceDto } from './dto/create.finances.dto';
-import { UserRequest } from '../users/interfaces/user-request.interface';
+import { CreateFinanceDto } from './dto/create-finances.dto';
 import { JwtAuthGuard } from '../jwt/jwt-auth.guard';
 import {
   ApiBearerAuth,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateFinanceDto } from './dto/update.finance.dto';
-import { IFinance } from './interfaces/finance.interface';
+import { UpdateFinanceDto } from './dto/update-finance.dto';
+import { CreateFinanceResponseDto } from './dto/create-finance-response.dto';
+import { FindFinancesQueryDto } from './dto/find-finances-query.dto';
+import { UpdateFinanceResponseDto } from './dto/update-finance-response.dto';
+import {
+  CategoryStatisticsResponseDto,
+  MonthlyStatisticsResponseDto,
+  TotalStatisticsResponseDto,
+} from './dto/statistics-response.dto';
+import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
+import { UserId } from '../common/decorators/user-id.decorator';
 
 @ApiTags('finances')
 @Controller('finances')
@@ -36,50 +42,47 @@ export class FinancesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new finance record' })
+  @ApiOkResponse({ type: CreateFinanceResponseDto })
   @ApiResponse({
     status: 201,
     description: 'Finance record created successfully',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @HttpCode(HttpStatus.CREATED)
-  async addFinance(
+  async createFinance(
     @Body() createFinanceDto: CreateFinanceDto,
-    @Req() req: Request & UserRequest,
-  ): Promise<IFinance> {
-    return this.financesService.addFinance(createFinanceDto, req.user.id);
+    @UserId() userId: number,
+  ): Promise<CreateFinanceResponseDto> {
+    return this.financesService.createFinance(createFinanceDto, userId);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get finance all finances records or get by type' })
+  @ApiOkResponse({ type: FindFinancesListResponseDto })
   @ApiResponse({
     status: 200,
     description: 'Finance records returned successfully',
   })
-  @HttpCode(200)
-  async getFinances(
-    @Query('type') type: FinanceType,
-    @Request() req: UserRequest,
-  ): Promise<IFinance[]> {
-    return this.financesService.getFinances(req.user.id, type);
+  async findFinances(
+    @Query() query: FindFinancesQueryDto,
+    @UserId() userId: number,
+  ): Promise<FindFinancesListResponseDto> {
+    return this.financesService.findFinances(userId, query?.type);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a finance record' })
+  @ApiOkResponse({ type: UpdateFinanceResponseDto })
   @ApiResponse({
     status: 200,
     description: 'Finance record updated successfully',
   })
-  @HttpCode(200)
   async updateFinanceById(
     @Param('id') id: number,
     @Body() updateFinanceDto: UpdateFinanceDto,
-    @Req() req: UserRequest,
-  ): Promise<IFinance | null> {
-    return this.financesService.updateFinanceById(
-      id,
-      updateFinanceDto,
-      req.user.id,
-    );
+    @UserId() userId: number,
+  ): Promise<UpdateFinanceResponseDto | null> {
+    return this.financesService.updateFinanceById(id, updateFinanceDto, userId);
   }
 
   @Delete(':id')
@@ -89,40 +92,45 @@ export class FinancesController {
     description: 'Finance record deleted successfully',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async removeFinanceById(
+  async deleteFinanceById(
     @Param('id') id: number,
-    @Req() req: UserRequest,
+    @UserId() userId: number,
   ): Promise<void> {
-    await this.financesService.removeFinanceById(id, req.user.id);
+    await this.financesService.deleteFinanceById(id, userId);
   }
 
   @Get('statistics/category')
   @ApiOperation({ summary: 'Get statisctics by category' })
+  @ApiOkResponse({ type: CategoryStatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return statistics by category' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getCategoryStatistics(@Req() req: UserRequest): Promise<any> {
-    return this.financesService.getCategoryStatistics(req.user.id);
+  async findCategoryStatistics(
+    @UserId() userId: number,
+  ): Promise<CategoryStatisticsResponseDto> {
+    return this.financesService.findCategoryStatistics(userId);
   }
 
   @Get('statistics/total')
   @ApiOperation({ summary: 'Get total statisctics' })
+  @ApiOkResponse({ type: TotalStatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return total statistics ' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @HttpCode(200)
-  async getTotalStatistics(@Req() req: UserRequest): Promise<any> {
-    return this.financesService.getTotalStatistics(req.user.id);
+  async findTotalStatistics(
+    @UserId() userId: number,
+  ): Promise<TotalStatisticsResponseDto> {
+    return this.financesService.findTotalStatistics(userId);
   }
 
   @Get('statistics/monthly')
   @ApiOperation({ summary: 'Get monthly statisctics' })
+  @ApiOkResponse({ type: MonthlyStatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return monthly statistics' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @HttpCode(200)
-  async getMonthlyStatistics(
-    @Req() req: UserRequest,
+  async findMonthlyStatistics(
+    @UserId() userId: number,
     @Query('month') month: number,
     @Query('year') year: number,
-  ): Promise<any> {
-    return this.financesService.getMonthlyStatistics(req.user.id, month, year);
+  ): Promise<MonthlyStatisticsResponseDto> {
+    return this.financesService.findMonthlyStatistics(userId, month, year);
   }
 }

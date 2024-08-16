@@ -1,5 +1,5 @@
 export interface IFinance {
-  id?: number;
+  id: number;
   amount: number;
   type: FinanceType;
   category_id: number;
@@ -11,4 +11,54 @@ export interface IFinance {
 export enum FinanceType {
   INCOME = 'income',
   EXPENSE = 'expense',
+}
+
+export interface ICreateFinance {
+  amount: number;
+  date: string;
+  description?: string;
+  category_id: number;
+  user_id?: number;
+  type: FinanceType;
+}
+
+export interface ICreateFinanceResponse {
+  id: number;
+}
+
+export interface IFindFinancesResponse {
+  finances: IFinanceDetails[];
+}
+
+export interface IFinanceDetails {
+  id: number;
+  amount: number;
+  date: string;
+  description?: string;
+  category_id: number;
+  user_id: number;
+  type: FinanceType;
+}
+
+export interface IUpdateFinance {
+  amount?: number;
+  date?: string;
+  description?: string;
+  category_id?: number;
+  type?: FinanceType;
+}
+
+export interface ICategoryStatistics {
+  category_id: number;
+  totalAmount: number;
+}
+
+export interface ITotalStatistics {
+  type: string;
+  total: number;
+}
+
+export interface IMonthlyStatistics {
+  type: string;
+  total: number;
 }
