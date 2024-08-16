@@ -4,7 +4,11 @@ import { ModelClass } from 'objection';
 import { Category } from '../categories/categories.model';
 import { CreateCategoryDto } from '../categories/dto/create-category.dto';
 import { UpdateCategoryDto } from '../categories/dto/update.category.dto';
-import { ICategory } from '../categories/interfaces/category.interface';
+import {
+  ICategory,
+  ICreateCategory,
+  IUpdateCategory,
+} from '../categories/interfaces/category.interface';
 
 @Injectable()
 export class CategoriesRepository {
@@ -12,10 +16,8 @@ export class CategoriesRepository {
     @InjectModel(Category) private readonly categoryModel: ModelClass<Category>,
   ) {}
 
-  async createCategory(
-    createCategoryDto: CreateCategoryDto,
-  ): Promise<ICategory> {
-    return this.categoryModel.query().insert(createCategoryDto);
+  async createCategory(createCategory: ICreateCategory): Promise<ICategory> {
+    return this.categoryModel.query().insert(createCategory);
   }
 
   async findAllCategories(): Promise<ICategory[]> {
@@ -32,9 +34,9 @@ export class CategoriesRepository {
 
   async updateCategoryById(
     id: number,
-    updateCategoryDto: UpdateCategoryDto,
+    updateCategory: IUpdateCategory,
   ): Promise<ICategory | null> {
-    return this.categoryModel.query().patchAndFetchById(id, updateCategoryDto);
+    return this.categoryModel.query().patchAndFetchById(id, updateCategory);
   }
 
   async deleteCategoryById(id: number): Promise<void> {
