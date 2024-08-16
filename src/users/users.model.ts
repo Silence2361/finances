@@ -23,7 +23,7 @@ export class User extends Model {
         modelClass: Finance,
         join: {
           from: 'users.id',
-          to: 'finances.user_id',
+          to: 'finances.userId',
         },
       },
     };
