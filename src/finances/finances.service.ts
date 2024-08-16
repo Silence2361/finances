@@ -31,6 +31,14 @@ export class FinancesService {
       user_id: userId,
       date: new Date(createFinance.date).toISOString(),
     };
+    const categoryExists = await this.categoriesRepository.findCategoryById(
+      createFinance.category_id,
+    );
+    if (!categoryExists) {
+      throw new NotFoundException(
+        `Category with id ${createFinance.category_id} not found`,
+      );
+    }
 
     const createdFinance = await this.financesRepository.createFinance(finance);
     return { id: createdFinance.id };
