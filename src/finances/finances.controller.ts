@@ -67,10 +67,10 @@ export class FinancesController {
   })
   @HttpCode(200)
   async findFinances(
-    @Query('type') query: FindFinancesQueryDto,
+    @Query() query: FindFinancesQueryDto,
     @UserId() userId: number,
   ): Promise<FindFinancesListResponseDto> {
-    return this.financesService.findFinances(userId, query.type);
+    return this.financesService.findFinances(userId, query?.type);
   }
 
   @Put(':id')
