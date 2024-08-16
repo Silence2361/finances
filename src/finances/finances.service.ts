@@ -28,15 +28,15 @@ export class FinancesService {
   ): Promise<ICreateFinanceResponse> {
     const finance: ICreateFinance = {
       ...createFinance,
-      user_id: userId,
+      userId,
       date: new Date(createFinance.date).toISOString(),
     };
     const categoryExists = await this.categoriesRepository.findCategoryById(
-      createFinance.category_id,
+      createFinance.categoryId,
     );
     if (!categoryExists) {
       throw new NotFoundException(
-        `Category with id ${createFinance.category_id} not found`,
+        `Category with id ${createFinance.categoryId} not found`,
       );
     }
 
@@ -61,23 +61,23 @@ export class FinancesService {
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
-    if (finance.user_id !== userId) {
+    if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
-    if (updateFinance.category_id) {
+    if (updateFinance.categoryId) {
       const categoryExists = await this.categoriesRepository.findCategoryById(
-        updateFinance.category_id,
+        updateFinance.categoryId,
       );
       if (!categoryExists) {
         throw new NotFoundException(
-          `Category with id ${updateFinance.category_id} not found`,
+          `Category with id ${updateFinance.categoryId} not found`,
         );
       }
     }
 
     const updatedFinance: Partial<IFinance> = {
       ...updateFinance,
-      user_id: userId,
+      userId,
       date: updateFinance.date
         ? new Date(updateFinance.date).toISOString()
         : finance.date,
@@ -96,7 +96,7 @@ export class FinancesService {
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
-    if (finance.user_id !== userId) {
+    if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
     await this.financesRepository.deleteFinanceById(id);

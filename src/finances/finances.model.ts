@@ -14,8 +14,8 @@ export class Finance extends Model {
   amount: number;
   date: string;
   description?: string;
-  category_id: number;
-  user_id: number;
+  categoryId: number;
+  userId: number;
   type: FinanceType;
 
   static get relationMappings() {
@@ -24,7 +24,7 @@ export class Finance extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'finances.user_id',
+          from: 'finances.userId',
           to: 'users.id',
         },
       },
@@ -32,7 +32,7 @@ export class Finance extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: Category,
         join: {
-          from: 'finances.category_id',
+          from: 'finances.categoryId',
           to: 'categories.id',
         },
       },
@@ -42,15 +42,15 @@ export class Finance extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['amount', 'date', 'category_id', 'user_id', 'type'],
+      required: ['amount', 'date', 'categoryId', 'userId', 'type'],
 
       properties: {
         id: { type: 'integer' },
         amount: { type: 'number' },
         date: { type: 'string', format: 'date-time' },
         description: { type: ['string', 'null'], maxLength: 300 },
-        category_id: { type: 'integer' },
-        user_id: { type: 'integer' },
+        categoryId: { type: 'integer' },
+        userId: { type: 'integer' },
         type: {
           type: 'string',
           enum: [FinanceType.INCOME, FinanceType.EXPENSE],

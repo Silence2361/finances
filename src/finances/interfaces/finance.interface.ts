@@ -2,9 +2,9 @@ export interface IFinance {
   id: number;
   amount: number;
   type: FinanceType;
-  category_id: number;
+  categoryId: number;
   description?: string;
-  user_id: number;
+  userId: number;
   date: string;
 }
 
@@ -17,8 +17,8 @@ export interface ICreateFinance {
   amount: number;
   date: string;
   description?: string;
-  category_id: number;
-  user_id?: number;
+  categoryId: number;
+  userId?: number;
   type: FinanceType;
 }
 
@@ -35,8 +35,8 @@ export interface IFinanceDetails {
   amount: number;
   date: string;
   description?: string;
-  category_id: number;
-  user_id: number;
+  categoryId: number;
+  userId: number;
   type: FinanceType;
 }
 
@@ -44,12 +44,12 @@ export interface IUpdateFinance {
   amount?: number;
   date?: string;
   description?: string;
-  category_id?: number;
+  categoryId?: number;
   type?: FinanceType;
 }
 
 export interface ICategoryStatistics {
-  category_id: number;
+  categoryId: number;
   totalAmount: number;
 }
 

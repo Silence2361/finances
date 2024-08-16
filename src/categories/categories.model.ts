@@ -14,7 +14,7 @@ export class Category extends Model {
         modelClass: Finance,
         join: {
           from: 'categories.id',
-          to: 'finances.category_id',
+          to: 'finances.categoryId',
         },
       },
     };

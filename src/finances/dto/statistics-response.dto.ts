@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CategoryStatisticsResponseDto {
   @ApiProperty()
-  category_id: number;
+  categoryId: number;
 
   @ApiProperty()
   totalAmount: number;

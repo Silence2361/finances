@@ -24,7 +24,7 @@ export class FinancesRepository {
   async findFinances(userId: number, type?: string): Promise<IFinance[]> {
     const query = this.financeModel
       .query()
-      .where({ user_id: userId })
+      .where({ userId: userId })
       .withGraphFetched('category');
 
     if (type) {

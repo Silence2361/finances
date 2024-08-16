@@ -39,7 +39,7 @@ export class CreateFinanceDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  category_id: number;
+  categoryId: number;
 
   @ApiProperty({
     example: FinanceType.EXPENSE,

@@ -14,10 +14,10 @@ export class UpdateFinanceResponseDto {
   description?: string;
 
   @ApiProperty()
-  category_id: number;
+  categoryId: number;
 
   @ApiProperty()
-  user_id: number;
+  userId: number;
 
   @ApiProperty()
   type: string;
