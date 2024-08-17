@@ -6,11 +6,9 @@ import {
 
 import { FinancesRepository } from '../../database/repositories/finance.repository';
 import {
-  ICategoryStatistics,
   ICreateFinance,
   ICreateFinanceResponse,
   IFinance,
-  IFindFinancesResponse,
   IUpdateFinance,
 } from '../../database/finances-database/interfaces/finance.interface';
 import { CategoriesRepository } from '../../database/repositories/category.repository';
@@ -42,14 +40,6 @@ export class FinancesService {
 
     const createdFinance = await this.financesRepository.createFinance(finance);
     return { id: createdFinance.id };
-  }
-
-  async findFinances(
-    userId: number,
-    type?: string,
-  ): Promise<IFindFinancesResponse> {
-    const finances = await this.financesRepository.findFinances(userId, type);
-    return { finances };
   }
 
   async updateFinanceById(
@@ -100,21 +90,5 @@ export class FinancesService {
       throw new ForbiddenException();
     }
     await this.financesRepository.deleteFinanceById(id);
-  }
-
-  async findCategoryStatistics(userId: number): Promise<ICategoryStatistics> {
-    return this.financesRepository.findCategoryStatistics(userId);
-  }
-
-  async findTotalStatistics(userId: number): Promise<any> {
-    return this.financesRepository.findTotalStatistics(userId);
-  }
-
-  async findMonthlyStatistics(
-    userId: number,
-    month: number,
-    year: number,
-  ): Promise<any> {
-    return this.financesRepository.findMonthlyStatistics(userId, month, year);
   }
 }

@@ -32,13 +32,17 @@ import {
 } from './dto/statistics-response.dto';
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 import { UserId } from '../common/decorators/user-id.decorator';
+import { FinancesQueryService } from './query.service';
 
 @ApiTags('finances')
 @Controller('finances')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class FinancesController {
-  constructor(private readonly financesService: FinancesService) {}
+  constructor(
+    private readonly financesService: FinancesService,
+    private readonly financesQueryService: FinancesQueryService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new finance record' })
@@ -67,7 +71,7 @@ export class FinancesController {
     @Query() query: FindFinancesQueryDto,
     @UserId() userId: number,
   ): Promise<FindFinancesListResponseDto> {
-    return this.financesService.findFinances(userId, query?.type);
+    return this.financesQueryService.findFinances(userId, query?.type);
   }
 
   @Put(':id')
@@ -107,7 +111,7 @@ export class FinancesController {
   async findCategoryStatistics(
     @UserId() userId: number,
   ): Promise<CategoryStatisticsResponseDto> {
-    return this.financesService.findCategoryStatistics(userId);
+    return this.financesQueryService.findCategoryStatistics(userId);
   }
 
   @Get('statistics/total')
@@ -118,7 +122,7 @@ export class FinancesController {
   async findTotalStatistics(
     @UserId() userId: number,
   ): Promise<TotalStatisticsResponseDto> {
-    return this.financesService.findTotalStatistics(userId);
+    return this.financesQueryService.findTotalStatistics(userId);
   }
 
   @Get('statistics/monthly')
@@ -131,6 +135,6 @@ export class FinancesController {
     @Query('month') month: number,
     @Query('year') year: number,
   ): Promise<MonthlyStatisticsResponseDto> {
-    return this.financesService.findMonthlyStatistics(userId, month, year);
+    return this.financesQueryService.findMonthlyStatistics(userId, month, year);
   }
 }
