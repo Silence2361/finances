@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ObjectionModule } from 'nestjs-objection';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { CategoriesModule } from './categories/categories.module';
-import { FinancesModule } from './finances/finances.module';
-import { DatabaseModule } from './repositories/repositories.module';
-import { JwtModule } from './jwt/jwt.module';
+import { AuthModule } from './rest/auth/auth.module';
+import { UsersModule } from './rest/users/users.module';
+import { CategoriesModule } from './rest/categories/categories.module';
+import { FinancesModule } from './rest/finances/finances.module';
+import { DatabaseModule } from './database/repositories/repositories.module';
+import { JwtModule } from './third-party/jwt/jwt.module';
 
 @Module({
   imports: [
