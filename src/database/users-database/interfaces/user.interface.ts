@@ -13,17 +13,35 @@ export interface ICreateUser {
   role: UserRole;
 }
 
+export interface ICreateUserResponse {
+  id: number;
+}
+
 export interface IUpdateUser {
   email?: string;
   password?: string;
   role?: UserRole;
 }
 
-export interface IUserResponse {
+export interface IUpdateUserResponse {
   id: number;
+  email: string;
+  role: UserRole;
 }
 
-export interface IUserDetails {
+export interface IFindAllUsersResponse {
+  id: number;
+  email: string;
+  role: UserRole;
+}
+
+export interface IFindUserByIdResponse {
+  id: number;
+  email: string;
+  role: UserRole;
+}
+
+export interface IFindUserByEmailResponse {
   id: number;
   email: string;
   role: UserRole;
