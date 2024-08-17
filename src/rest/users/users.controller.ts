@@ -26,13 +26,17 @@ import { UserByIdResponseDto } from './dto/user-by-id-response.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
+import { UsersQueryService } from './query.service';
 
 @ApiTags('users')
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly usersService: UserService,
+    private readonly usersQueryService: UsersQueryService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
@@ -44,7 +48,7 @@ export class UserController {
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserCreateResponseDto> {
-    return this.userService.createUser(createUserDto);
+    return this.usersService.createUser(createUserDto);
   }
 
   @Get()
@@ -53,7 +57,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Users returned successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findAll(): Promise<UsersListResponseDto[]> {
-    return this.userService.findAllUsers();
+    return this.usersQueryService.findAllUsers();
   }
 
   @Get(':id')
@@ -67,7 +71,7 @@ export class UserController {
   async findUserById(
     @Param('id') id: number,
   ): Promise<UserByIdResponseDto | null> {
-    return this.userService.findUserById(id);
+    return this.usersQueryService.findUserById(id);
   }
 
   @Put(':id')
@@ -80,7 +84,7 @@ export class UserController {
     @Param('id') id: number,
     @Body() updateUserDto: updateUserDto,
   ): Promise<UserUpdateResponseDto | null> {
-    return this.userService.updateUserById(id, updateUserDto);
+    return this.usersService.updateUserById(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -90,6 +94,6 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUserById(@Param('id') id: number): Promise<void> {
-    await this.userService.deleteUserById(id);
+    await this.usersService.deleteUserById(id);
   }
 }
