@@ -27,10 +27,11 @@ import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
 import { UsersQueryService } from './users-query.service';
+import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UserController {
   constructor(
