@@ -32,7 +32,7 @@ import {
 } from './dto/statistics-response.dto';
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 import { UserId } from '../common/decorators/user-id.decorator';
-import { FinancesQueryService } from './query.service';
+import { FinancesQueryService } from './finance-query.service';
 
 @ApiTags('finances')
 @Controller('finances')
