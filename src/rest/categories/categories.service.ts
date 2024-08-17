@@ -7,9 +7,10 @@ import { CategoriesRepository } from '../../database/repositories/category.repos
 import {
   ICategory,
   ICategoryDetails,
-  ICategoryResponse,
   ICreateCategory,
+  ICreateCategoryResponse,
   IUpdateCategory,
+  IUpdateCategoryResponse,
 } from '../../database/categories-database/interfaces/category.interface';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class CategoriesService {
 
   async createCategory(
     createCategory: ICreateCategory,
-  ): Promise<ICategoryResponse> {
+  ): Promise<ICreateCategoryResponse> {
     const existingCategory = await this.categoriesRepository.findCategoryByName(
       createCategory.name,
     );
@@ -34,7 +35,7 @@ export class CategoriesService {
   async updateCategoryById(
     id: number,
     updateCategory: IUpdateCategory,
-  ): Promise<ICategoryDetails | null> {
+  ): Promise<IUpdateCategoryResponse | null> {
     const category: ICategory | null =
       await this.categoriesRepository.updateCategoryById(id, updateCategory);
     if (!category) {
