@@ -5,7 +5,7 @@ import { UserService } from './users.service';
 import { UserController } from './users.controller';
 import { UsersRepository } from '../../database/repositories/user.repository';
 import { DatabaseModule } from '../../database/repositories/repositories.module';
-import { UsersQueryService } from './query.service';
+import { UsersQueryService } from './users-query.service';
 
 @Module({
   imports: [ObjectionModule.forFeature([User]), DatabaseModule],

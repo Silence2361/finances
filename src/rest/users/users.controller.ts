@@ -26,7 +26,7 @@ import { UserByIdResponseDto } from './dto/user-by-id-response.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
-import { UsersQueryService } from './query.service';
+import { UsersQueryService } from './users-query.service';
 
 @ApiTags('users')
 @Controller('users')
