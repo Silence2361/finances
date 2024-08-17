@@ -4,12 +4,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcryptjs';
-import { IUser } from '../../database/users-database/interfaces/user.interface';
-import { UsersRepository } from '../../database/repositories/user.repository';
-import { UserRole } from '../../database/users-database/users.model';
-import { AuthResponse } from '../../database/auth-database/interfaces/auth-response.interface';
+import { IUser } from '../users/interfaces/user.interface';
+import { UsersRepository } from '../repositories/user.repository';
+import { UserRole } from '../users/users.model';
+import {
+  ILoginCredentials,
+  ILoginResponse,
+  IRegisterCredentials,
+  IRegisterResponse,
+} from './interfaces/auth-response.interface';
 
 @Injectable()
 export class AuthService {
@@ -18,30 +22,36 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async register(dto: AuthDto): Promise<IUser> {
-    const existingUser = await this.usersRepository.findUserByEmail(dto.email);
+  async register(
+    credentials: IRegisterCredentials,
+  ): Promise<IRegisterResponse> {
+    const existingUser = await this.usersRepository.findUserByEmail(
+      credentials.email,
+    );
     if (existingUser) {
       throw new ConflictException('Email already registered');
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-    dto.password = hashedPassword;
+    const hashedPassword = await bcrypt.hash(credentials.password, 10);
+    credentials.password = hashedPassword;
 
     const user: IUser = await this.usersRepository.createUser({
-      email: dto.email,
-      password: dto.password,
+      email: credentials.email,
+      password: credentials.password,
       role: UserRole.USER,
     });
-    delete user.password;
-    return user;
+    return { email: user.email, role: user.role, id: user.id };
   }
 
-  async login(dto: AuthDto): Promise<AuthResponse> {
-    const user = await this.usersRepository.findUserByEmail(dto.email);
+  async login(credentials: ILoginCredentials): Promise<ILoginResponse> {
+    const user = await this.usersRepository.findUserByEmail(credentials.email);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const isCorrectPassword = await bcrypt.compare(dto.password, user.password);
+    const isCorrectPassword = await bcrypt.compare(
+      credentials.password,
+      user.password,
+    );
 
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Wrong Password');
