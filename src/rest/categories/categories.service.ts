@@ -6,7 +6,6 @@ import {
 import { CategoriesRepository } from '../../database/repositories/category.repository';
 import {
   ICategory,
-  ICategoryDetails,
   ICreateCategory,
   ICreateCategoryResponse,
   IUpdateCategory,
