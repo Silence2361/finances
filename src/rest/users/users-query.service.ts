@@ -1,15 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../database/repositories/user.repository';
 import {
+  IFindAllUsersResponse,
+  IFindUserByEmailResponse,
+  IFindUserByIdResponse,
   IUser,
-  IUserDetails,
 } from '../../database/users-database/interfaces/user.interface';
 
 @Injectable()
 export class UsersQueryService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async findAllUsers(): Promise<IUserDetails[]> {
+  async findAllUsers(): Promise<IFindAllUsersResponse[]> {
     const users: IUser[] = await this.userRepository.findAllUsers();
     return users.map((user) => ({
       id: user.id,
@@ -18,7 +20,7 @@ export class UsersQueryService {
     }));
   }
 
-  async findUserById(id: number): Promise<IUserDetails | null> {
+  async findUserById(id: number): Promise<IFindUserByIdResponse | null> {
     const user: IUser | null = await this.userRepository.findUserById(id);
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
@@ -30,7 +32,9 @@ export class UsersQueryService {
     };
   }
 
-  async findUserByEmail(email: string): Promise<IUserDetails | null> {
+  async findUserByEmail(
+    email: string,
+  ): Promise<IFindUserByEmailResponse | null> {
     const user: IUser | null = await this.userRepository.findUserByEmail(email);
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);

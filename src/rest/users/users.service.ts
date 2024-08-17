@@ -6,10 +6,10 @@ import {
 import * as bcrypt from 'bcryptjs';
 import {
   ICreateUser,
+  ICreateUserResponse,
   IUpdateUser,
+  IUpdateUserResponse,
   IUser,
-  IUserDetails,
-  IUserResponse,
 } from '../../database/users-database/interfaces/user.interface';
 import { UsersRepository } from '../../database/repositories/user.repository';
 
@@ -17,7 +17,7 @@ import { UsersRepository } from '../../database/repositories/user.repository';
 export class UserService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(createUser: ICreateUser): Promise<IUserResponse> {
+  async createUser(createUser: ICreateUser): Promise<ICreateUserResponse> {
     const existingUser = await this.usersRepository.findUserByEmail(
       createUser.email,
     );
@@ -36,7 +36,7 @@ export class UserService {
   async updateUserById(
     id: number,
     updateUser: IUpdateUser,
-  ): Promise<IUserDetails> {
+  ): Promise<IUpdateUserResponse> {
     if (updateUser.password) {
       updateUser.password = await bcrypt.hash(updateUser.password, 10);
     }
