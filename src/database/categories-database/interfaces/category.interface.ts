@@ -30,8 +30,3 @@ export interface IFindCategoryByIdResponse {
   id: number;
   name: string;
 }
-
-export interface ICategoryDetails {
-  id: number;
-  name: string;
-}
