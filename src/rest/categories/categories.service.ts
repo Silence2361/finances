@@ -31,19 +31,6 @@ export class CategoriesService {
     return { id: category.id };
   }
 
-  async findAllCategories(): Promise<ICategoryDetails[]> {
-    return this.categoriesRepository.findAllCategories();
-  }
-
-  async findCategoryById(id: number): Promise<ICategoryDetails | null> {
-    const category: ICategory | null =
-      await this.categoriesRepository.findCategoryById(id);
-    if (!category) {
-      throw new NotFoundException(`Category with id ${id} not found`);
-    }
-    return category;
-  }
-
   async updateCategoryById(
     id: number,
     updateCategory: IUpdateCategory,

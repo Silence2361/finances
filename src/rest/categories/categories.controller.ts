@@ -26,13 +26,17 @@ import { UpdateCategoryResponseDto } from './dto/update-category-response.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 import { CreateCategoryResponseDto } from './dto/create-category-response.dto';
+import { CategoriesQueryService } from './categories-query.service';
 
 @ApiTags('categories')
 @Controller('categories')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    private readonly categoriesQueryService: CategoriesQueryService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
@@ -51,7 +55,7 @@ export class CategoriesController {
   @ApiOkResponse({ type: [CategoriesListResponseDto] })
   @ApiResponse({ status: 200, description: 'Categories returned successfully' })
   async findAllCategories(): Promise<CategoriesListResponseDto[]> {
-    return this.categoriesService.findAllCategories();
+    return this.categoriesQueryService.findAllCategories();
   }
 
   @Get(':id')
@@ -61,7 +65,7 @@ export class CategoriesController {
   async findCategoryById(
     @Param('id') id: number,
   ): Promise<CategoryByIdResponseDto | null> {
-    return this.categoriesService.findCategoryById(id);
+    return this.categoriesQueryService.findCategoryById(id);
   }
 
   @Put(':id')
