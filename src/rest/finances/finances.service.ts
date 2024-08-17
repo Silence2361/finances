@@ -10,6 +10,7 @@ import {
   ICreateFinanceResponse,
   IFinance,
   IUpdateFinance,
+  IUpdateFinanceResponse,
 } from '../../database/finances-database/interfaces/finance.interface';
 import { CategoriesRepository } from '../../database/repositories/category.repository';
 
@@ -46,7 +47,7 @@ export class FinancesService {
     id: number,
     updateFinance: IUpdateFinance,
     userId: number,
-  ): Promise<IFinance | null> {
+  ): Promise<IUpdateFinanceResponse | null> {
     const finance = await this.financesRepository.findFinanceById(id);
     if (!finance) {
       throw new NotFoundException('Finance record not found');

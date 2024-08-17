@@ -41,11 +41,23 @@ export interface IFinanceDetails {
 }
 
 export interface IUpdateFinance {
+  id?: number;
   amount?: number;
   date?: string;
   description?: string;
   categoryId?: number;
+  userId?: number;
   type?: FinanceType;
+}
+
+export interface IUpdateFinanceResponse {
+  id: number;
+  amount: number;
+  date: string;
+  description?: string;
+  categoryId: number;
+  userId: number;
+  type: FinanceType;
 }
 
 export interface ICategoryStatistics {
