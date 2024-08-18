@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
-import { UpdateCategoryDto } from './dto/update.category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateCategoryResponseDto } from './dto/update-category-response.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
