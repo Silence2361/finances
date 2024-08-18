@@ -22,8 +22,8 @@ export class UsersRepository {
     return this.userModel.query();
   }
 
-  async findUserById(id: number): Promise<IUser | null> {
-    return this.userModel.query().findById(id);
+  async findUserById(userId: number): Promise<IUser | null> {
+    return this.userModel.query().findById(userId);
   }
 
   async findUserByEmail(email: string): Promise<IUser | null> {
@@ -31,13 +31,13 @@ export class UsersRepository {
   }
 
   async updateUserById(
-    id: number,
+    userId: number,
     updateUser: IUpdateUser,
   ): Promise<IUser | null> {
-    return this.userModel.query().patchAndFetchById(id, updateUser);
+    return this.userModel.query().patchAndFetchById(userId, updateUser);
   }
 
-  async deleteUserById(id: number): Promise<void> {
-    await this.userModel.query().deleteById(id);
+  async deleteUserById(userId: number): Promise<void> {
+    await this.userModel.query().deleteById(userId);
   }
 }

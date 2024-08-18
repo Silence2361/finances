@@ -17,36 +17,45 @@ import { UsersRepository } from '../../database/repositories/user.repository';
 export class UserService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(createUser: ICreateUser): Promise<ICreateUserResponse> {
-    const existingUser = await this.usersRepository.findUserByEmail(
-      createUser.email,
-    );
+  async createUser(createUserData: ICreateUser): Promise<ICreateUserResponse> {
+    const { email, role, password } = createUserData;
+    const existingUser = await this.usersRepository.findUserByEmail(email);
     if (existingUser) {
       throw new ConflictException('Email already registered');
     }
-    const hashedPassword = await bcrypt.hash(createUser.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user: IUser = await this.usersRepository.createUser({
-      ...createUser,
+      email,
       password: hashedPassword,
+      role,
     });
     return { id: user.id };
   }
 
   async updateUserById(
-    id: number,
-    updateUser: IUpdateUser,
+    userId: number,
+    updateUserData: IUpdateUser,
   ): Promise<IUpdateUserResponse> {
-    if (updateUser.password) {
-      updateUser.password = await bcrypt.hash(updateUser.password, 10);
+    const { email, role, password } = updateUserData;
+
+    let hashedPassword: string | undefined;
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 10);
     }
 
+    const updatedUserData = {
+      email,
+      role,
+      password: hashedPassword || password,
+    };
+
     const user: IUser | null = await this.usersRepository.updateUserById(
-      id,
-      updateUser,
+      userId,
+      updatedUserData,
     );
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
     return {
       id: user.id,
@@ -55,11 +64,11 @@ export class UserService {
     };
   }
 
-  async deleteUserById(id: number): Promise<void> {
-    const user = await this.usersRepository.findUserById(id);
+  async deleteUserById(userId: number): Promise<void> {
+    const user = await this.usersRepository.findUserById(userId);
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
-    await this.usersRepository.deleteUserById(id);
+    await this.usersRepository.deleteUserById(userId);
   }
 }
