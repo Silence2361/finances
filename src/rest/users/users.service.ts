@@ -34,7 +34,7 @@ export class UserService {
   }
 
   async updateUserById(
-    id: number,
+    userId: number,
     updateUserData: IUpdateUser,
   ): Promise<IUpdateUserResponse> {
     const { email, role, password } = updateUserData;
@@ -51,11 +51,11 @@ export class UserService {
     };
 
     const user: IUser | null = await this.usersRepository.updateUserById(
-      id,
+      userId,
       updatedUserData,
     );
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
     return {
       id: user.id,
@@ -64,11 +64,11 @@ export class UserService {
     };
   }
 
-  async deleteUserById(id: number): Promise<void> {
-    const user = await this.usersRepository.findUserById(id);
+  async deleteUserById(userId: number): Promise<void> {
+    const user = await this.usersRepository.findUserById(userId);
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
-    await this.usersRepository.deleteUserById(id);
+    await this.usersRepository.deleteUserById(userId);
   }
 }
