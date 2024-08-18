@@ -10,7 +10,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './users.service';
 import {
   ApiBearerAuth,
@@ -70,9 +69,9 @@ export class UserController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findUserById(
-    @Param('id') id: number,
+    @Param('id') userId: number,
   ): Promise<UserByIdResponseDto | null> {
-    return this.usersQueryService.findUserById(id);
+    return this.usersQueryService.findUserById(userId);
   }
 
   @Put(':id')
@@ -82,10 +81,10 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async updateUserById(
-    @Param('id') id: number,
+    @Param('id') userId: number,
     @Body() updateUserDto: updateUserDto,
   ): Promise<UserUpdateResponseDto | null> {
-    return this.usersService.updateUserById(id, updateUserDto);
+    return this.usersService.updateUserById(userId, updateUserDto);
   }
 
   @Delete(':id')
@@ -94,7 +93,7 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUserById(@Param('id') id: number): Promise<void> {
-    await this.usersService.deleteUserById(id);
+  async deleteUserById(@Param('id') userId: number): Promise<void> {
+    return this.usersService.deleteUserById(userId);
   }
 }

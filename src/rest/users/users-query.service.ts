@@ -13,10 +13,10 @@ export class UsersQueryService {
 
   async findAllUsers(): Promise<IFindAllUsersResponse[]> {
     const users: IUser[] = await this.userRepository.findAllUsers();
-    return users.map((user) => ({
-      id: user.id,
-      email: user.email,
-      role: user.role,
+    return users.map(({ id, email, role }) => ({
+      id,
+      email,
+      role,
     }));
   }
 
@@ -25,10 +25,11 @@ export class UsersQueryService {
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
+    const { id: userId, email, role } = user;
     return {
-      id: user.id,
-      email: user.email,
-      role: user.role,
+      id: userId,
+      email,
+      role,
     };
   }
 
@@ -40,10 +41,11 @@ export class UsersQueryService {
       throw new NotFoundException(`User with email ${email} not found`);
     }
 
+    const { id, role } = user;
     return {
-      id: user.id,
-      email: user.email,
-      role: user.role,
+      id,
+      email,
+      role,
     };
   }
 }
