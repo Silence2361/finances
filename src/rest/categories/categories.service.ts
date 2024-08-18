@@ -17,37 +17,38 @@ export class CategoriesService {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
   async createCategory(
-    createCategory: ICreateCategory,
+    createCategoryData: ICreateCategory,
   ): Promise<ICreateCategoryResponse> {
-    const existingCategory = await this.categoriesRepository.findCategoryByName(
-      createCategory.name,
-    );
+    const { name } = createCategoryData;
+    const existingCategory =
+      await this.categoriesRepository.findCategoryByName(name);
     if (existingCategory) {
       throw new ConflictException('Category already exists');
     }
 
-    const category =
-      await this.categoriesRepository.createCategory(createCategory);
-    return { id: category.id };
+    const { id } = await this.categoriesRepository.createCategory({ name });
+    return { id };
   }
 
   async updateCategoryById(
-    id: number,
-    updateCategory: IUpdateCategory,
+    categoryId: number,
+    updateCategoryData: IUpdateCategory,
   ): Promise<IUpdateCategoryResponse | null> {
+    const { name } = updateCategoryData;
     const category: ICategory | null =
-      await this.categoriesRepository.updateCategoryById(id, updateCategory);
+      await this.categoriesRepository.updateCategoryById(categoryId, { name });
     if (!category) {
-      throw new NotFoundException(`Category with id ${id} not found`);
+      throw new NotFoundException(`Category with id ${categoryId} not found`);
     }
     return category;
   }
 
-  async deleteCategoryById(id: number): Promise<void> {
-    const category = await this.categoriesRepository.findCategoryById(id);
+  async deleteCategoryById(categoryId: number): Promise<void> {
+    const category =
+      await this.categoriesRepository.findCategoryById(categoryId);
     if (!category) {
-      throw new NotFoundException(`Category with id ${id} not found`);
+      throw new NotFoundException(`Category with id ${categoryId} not found`);
     }
-    await this.categoriesRepository.deleteCategoryById(id);
+    await this.categoriesRepository.deleteCategoryById(categoryId);
   }
 }

@@ -15,12 +15,12 @@ export class CategoriesQueryService {
   }
 
   async findCategoryById(
-    id: number,
+    categoryId: number,
   ): Promise<IFindCategoryByIdResponse | null> {
     const category: ICategory | null =
-      await this.categoriesRepository.findCategoryById(id);
+      await this.categoriesRepository.findCategoryById(categoryId);
     if (!category) {
-      throw new NotFoundException(`Category with id ${id} not found`);
+      throw new NotFoundException(`Category with id ${categoryId} not found`);
     }
     return category;
   }

@@ -63,9 +63,9 @@ export class CategoriesController {
   @ApiOkResponse({ type: CategoryByIdResponseDto })
   @ApiResponse({ status: 200, description: 'Category returned successfully' })
   async findCategoryById(
-    @Param('id') id: number,
+    @Param('id') categoryId: number,
   ): Promise<CategoryByIdResponseDto | null> {
-    return this.categoriesQueryService.findCategoryById(id);
+    return this.categoriesQueryService.findCategoryById(categoryId);
   }
 
   @Put(':id')
@@ -73,17 +73,20 @@ export class CategoriesController {
   @ApiOkResponse({ type: UpdateCategoryResponseDto })
   @ApiResponse({ status: 200, description: 'Category updated successfully' })
   async updateCategoryById(
-    @Param('id') id: number,
+    @Param('id') categoryId: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<UpdateCategoryResponseDto | null> {
-    return this.categoriesService.updateCategoryById(id, updateCategoryDto);
+    return this.categoriesService.updateCategoryById(
+      categoryId,
+      updateCategoryDto,
+    );
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete category' })
   @ApiResponse({ status: 204, description: 'Category deleted successfully' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteCategory(@Param('id') id: number): Promise<void> {
-    await this.categoriesService.deleteCategoryById(id);
+  async deleteCategory(@Param('id') categoryId: number): Promise<void> {
+    await this.categoriesService.deleteCategoryById(categoryId);
   }
 }
