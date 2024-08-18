@@ -35,27 +35,27 @@ export class FinancesRepository {
     return query;
   }
 
-  async findFinanceById(id: number): Promise<IFinance | null> {
+  async findFinanceById(financeId: number): Promise<IFinance | null> {
     const finance: IFinance | null = await this.financeModel
       .query()
-      .findById(id)
+      .findById(financeId)
       .withGraphFetched('category');
     return finance;
   }
 
   async updateFinanceById(
-    id: number,
+    financeId: number,
     updateFinance: IUpdateFinance,
   ): Promise<IFinance | null> {
     const finance: IFinance | null = await this.financeModel
       .query()
-      .patchAndFetchById(id, updateFinance)
+      .patchAndFetchById(financeId, updateFinance)
       .withGraphFetched('category');
     return finance;
   }
 
-  async deleteFinanceById(id: number): Promise<void> {
-    await this.financeModel.query().deleteById(id);
+  async deleteFinanceById(financeId: number): Promise<void> {
+    await this.financeModel.query().deleteById(financeId);
   }
 
   async findCategoryStatistics(userId: number): Promise<any> {

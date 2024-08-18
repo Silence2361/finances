@@ -16,6 +16,7 @@ import { CreateFinanceDto } from './dto/create-finances.dto';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -46,7 +47,7 @@ export class FinancesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new finance record' })
-  @ApiOkResponse({ type: CreateFinanceResponseDto })
+  @ApiCreatedResponse({ type: CreateFinanceResponseDto })
   @ApiResponse({
     status: 201,
     description: 'Finance record created successfully',
@@ -82,11 +83,15 @@ export class FinancesController {
     description: 'Finance record updated successfully',
   })
   async updateFinanceById(
-    @Param('id') id: number,
+    @Param('id') financeId: number,
     @Body() updateFinanceDto: UpdateFinanceDto,
     @UserId() userId: number,
   ): Promise<UpdateFinanceResponseDto | null> {
-    return this.financesService.updateFinanceById(id, updateFinanceDto, userId);
+    return this.financesService.updateFinanceById(
+      financeId,
+      updateFinanceDto,
+      userId,
+    );
   }
 
   @Delete(':id')
@@ -97,10 +102,10 @@ export class FinancesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteFinanceById(
-    @Param('id') id: number,
+    @Param('id') financeId: number,
     @UserId() userId: number,
   ): Promise<void> {
-    await this.financesService.deleteFinanceById(id, userId);
+    return this.financesService.deleteFinanceById(financeId, userId);
   }
 
   @Get('statistics/category')

@@ -22,21 +22,20 @@ export class FinancesService {
   ) {}
 
   async createFinance(
-    createFinance: ICreateFinance,
+    createFinanceData: ICreateFinance,
     userId: number,
   ): Promise<ICreateFinanceResponse> {
+    const { categoryId, date, ...rest } = createFinanceData;
     const finance: ICreateFinance = {
-      ...createFinance,
+      ...rest,
+      categoryId,
       userId,
-      date: new Date(createFinance.date).toISOString(),
+      date: new Date(date).toISOString(),
     };
-    const categoryExists = await this.categoriesRepository.findCategoryById(
-      createFinance.categoryId,
-    );
+    const categoryExists =
+      await this.categoriesRepository.findCategoryById(categoryId);
     if (!categoryExists) {
-      throw new NotFoundException(
-        `Category with id ${createFinance.categoryId} not found`,
-      );
+      throw new NotFoundException(`Category with id ${categoryId} not found`);
     }
 
     const createdFinance = await this.financesRepository.createFinance(finance);
@@ -44,52 +43,49 @@ export class FinancesService {
   }
 
   async updateFinanceById(
-    id: number,
-    updateFinance: IUpdateFinance,
+    financeId: number,
+    updateFinanceData: IUpdateFinance,
     userId: number,
   ): Promise<IUpdateFinanceResponse | null> {
-    const finance = await this.financesRepository.findFinanceById(id);
+    const { categoryId, date, ...rest } = updateFinanceData;
+    const finance = await this.financesRepository.findFinanceById(financeId);
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
     if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
-    if (updateFinance.categoryId) {
-      const categoryExists = await this.categoriesRepository.findCategoryById(
-        updateFinance.categoryId,
-      );
+    if (categoryId) {
+      const categoryExists =
+        await this.categoriesRepository.findCategoryById(categoryId);
       if (!categoryExists) {
-        throw new NotFoundException(
-          `Category with id ${updateFinance.categoryId} not found`,
-        );
+        throw new NotFoundException(`Category with id ${categoryId} not found`);
       }
     }
 
     const updatedFinance: Partial<IFinance> = {
-      ...updateFinance,
+      ...rest,
       userId,
-      date: updateFinance.date
-        ? new Date(updateFinance.date).toISOString()
-        : finance.date,
+      categoryId,
+      date: date ? new Date(date).toISOString() : finance.date,
     };
 
     const result = await this.financesRepository.updateFinanceById(
-      id,
+      financeId,
       updatedFinance,
     );
 
     return result;
   }
 
-  async deleteFinanceById(id: number, userId: number): Promise<void> {
-    const finance = await this.financesRepository.findFinanceById(id);
+  async deleteFinanceById(financeId: number, userId: number): Promise<void> {
+    const finance = await this.financesRepository.findFinanceById(financeId);
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
     if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
-    await this.financesRepository.deleteFinanceById(id);
+    await this.financesRepository.deleteFinanceById(financeId);
   }
 }
