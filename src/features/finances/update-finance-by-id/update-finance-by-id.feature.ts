@@ -20,9 +20,8 @@ export class UpdateFinanceByIdFeature {
   async execute(
     financeId: number,
     params: UpdateFinanceByIdParams,
-    userId: number,
   ): Promise<UpdateFinanceByIdResult | null> {
-    const { categoryId, date, ...rest } = params;
+    const { categoryId, date, userId, ...rest } = params;
     const finance = await this.financesRepository.findFinanceById(financeId);
     if (!finance) {
       throw new NotFoundException('Finance record not found');

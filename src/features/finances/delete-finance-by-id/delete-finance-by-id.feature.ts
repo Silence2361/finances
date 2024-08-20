@@ -15,18 +15,17 @@ export class DeleteFinanceByIdFeature {
 
   async execute(
     params: DeleteFinanceByIdFeatureParams,
-    userId: number,
   ): Promise<DeleteFinanceByIdFeatureResult> {
-    const { id } = params;
-    const finance = await this.financesRepository.findFinanceById(id);
+    const { userId, financeId } = params;
+    const finance = await this.financesRepository.findFinanceById(financeId);
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
     if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
-    await this.financesRepository.deleteFinanceById(id);
 
+    await this.financesRepository.deleteFinanceById(financeId);
     return { success: true };
   }
 }

@@ -16,9 +16,8 @@ export class CreateFinanceFeature {
 
   async execute(
     params: CreateFinanceFeatureParams,
-    userId: number,
   ): Promise<CreateFinanceFeatureResult> {
-    const { categoryId, date, ...rest } = params;
+    const { categoryId, date, userId, ...rest } = params;
     const finance: CreateFinanceFeatureParams = {
       ...rest,
       categoryId,

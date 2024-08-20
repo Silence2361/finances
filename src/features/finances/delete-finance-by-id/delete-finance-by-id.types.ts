@@ -1,5 +1,6 @@
 export interface DeleteFinanceByIdFeatureParams {
-  id: number;
+  financeId: number;
+  userId: number;
 }
 
 export interface DeleteFinanceByIdFeatureResult {

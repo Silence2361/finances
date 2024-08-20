@@ -10,10 +10,9 @@ export class FindFinancesFeature {
   constructor(private readonly financesRepository: FinancesRepository) {}
 
   async execute(
-    userId: number,
     params: FindFinancesFeatureParams,
   ): Promise<FindFinancesFeatureResult> {
-    const { type } = params;
+    const { type, userId } = params;
     const finances = await this.financesRepository.findFinances(userId, type);
     return { finances };
   }

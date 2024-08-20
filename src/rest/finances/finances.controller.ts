@@ -68,7 +68,7 @@ export class FinancesController {
     @Body() createFinanceDto: CreateFinanceDto,
     @UserId() userId: number,
   ): Promise<CreateFinanceResponseDto> {
-    return this.createFinanceFeature.execute(createFinanceDto, userId);
+    return this.createFinanceFeature.execute({ ...createFinanceDto, userId });
   }
 
   @Get()
@@ -82,7 +82,7 @@ export class FinancesController {
     @Query() query: FindFinancesQueryDto,
     @UserId() userId: number,
   ): Promise<FindFinancesListResponseDto> {
-    return this.findFinancesFeature.execute(userId, { type: query?.type });
+    return this.findFinancesFeature.execute({ userId, type: query?.type });
   }
 
   @Put(':id')
@@ -97,11 +97,10 @@ export class FinancesController {
     @Body() updateFinanceDto: UpdateFinanceDto,
     @UserId() userId: number,
   ): Promise<UpdateFinanceResponseDto | null> {
-    return this.updateFinanceByIdFeature.execute(
-      financeId,
-      updateFinanceDto,
+    return this.updateFinanceByIdFeature.execute(financeId, {
+      ...updateFinanceDto,
       userId,
-    );
+    });
   }
 
   @Delete(':id')
@@ -112,10 +111,10 @@ export class FinancesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteFinanceById(
-    @Param('id') id: number,
+    @Param('id') financeId: number,
     @UserId() userId: number,
   ): Promise<void> {
-    await this.deleteFinanceByIdFeature.execute({ id }, userId);
+    await this.deleteFinanceByIdFeature.execute({ financeId, userId });
   }
 
   @Get('statistics/category')
