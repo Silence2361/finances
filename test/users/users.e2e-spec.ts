@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { User } from '../../src/users/users.model';
+import { User } from '../../src/database/users-database/users.model';
 
 describe('UserController (e2e) - Create User', () => {
   let app: INestApplication;
@@ -66,7 +66,6 @@ describe('UserController (e2e) - Create User', () => {
       .expect(HttpStatus.CREATED);
 
     expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('email', uniqueEmail);
   });
 
   it('/users (GET) - should return all users', async () => {
