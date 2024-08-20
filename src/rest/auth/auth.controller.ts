@@ -33,6 +33,7 @@ export class AuthController {
   @ApiOkResponse({ type: LoginResponseDto })
   @ApiResponse({ status: 200, description: 'Successfully logged in.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @HttpCode(HttpStatus.OK)
   async login(@Body() dto: AuthDto): Promise<LoginResponseDto> {
     return this.authService.login(dto);
   }
