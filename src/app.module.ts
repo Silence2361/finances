@@ -7,6 +7,7 @@ import { CategoriesModule } from './rest/categories/categories.module';
 import { FinancesModule } from './rest/finances/finances.module';
 import { DatabaseModule } from './database/repositories/repositories.module';
 import { JwtModule } from './third-party/jwt/jwt.module';
+import { FeaturesModule } from './features/features.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { JwtModule } from './third-party/jwt/jwt.module';
     CategoriesModule,
     FinancesModule,
     JwtModule,
+    FeaturesModule,
   ],
   controllers: [],
 })

@@ -10,7 +10,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './users.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -20,13 +19,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
-import { updateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserByIdResponseDto } from './dto/user-by-id-response.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
-import { UsersQueryService } from './users-query.service';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
+import { CreateUserFeature } from '../../features/users/create-user/create-user.feature';
+import { UpdateUserFeature } from '../../features/users/update-user/update-user.feature';
+import { GetUsersFeature } from '../../features/users/get-users/get-users.feature';
+import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user-by-id.feature';
+import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
 
 @ApiTags('users')
 @Controller('users')
@@ -34,8 +37,11 @@ import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 @ApiBearerAuth()
 export class UserController {
   constructor(
-    private readonly usersService: UserService,
-    private readonly usersQueryService: UsersQueryService,
+    private readonly createUserFeature: CreateUserFeature,
+    private readonly updateUserFeature: UpdateUserFeature,
+    private readonly getUsersFeature: GetUsersFeature,
+    private readonly getUserByIdFeature: GetUserByIdFeature,
+    private readonly deleteUserByIdFeature: DeleteUserByIdFeature,
   ) {}
 
   @Post()
@@ -48,7 +54,7 @@ export class UserController {
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserCreateResponseDto> {
-    return this.usersService.createUser(createUserDto);
+    return this.createUserFeature.execute(createUserDto);
   }
 
   @Get()
@@ -57,7 +63,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Users returned successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findAll(): Promise<UsersListResponseDto[]> {
-    return this.usersQueryService.findAllUsers();
+    return this.getUsersFeature.execute({});
   }
 
   @Get(':id')
@@ -69,9 +75,9 @@ export class UserController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findUserById(
-    @Param('id') userId: number,
+    @Param('id') id: number,
   ): Promise<UserByIdResponseDto | null> {
-    return this.usersQueryService.findUserById(userId);
+    return this.getUserByIdFeature.execute({ id });
   }
 
   @Put(':id')
@@ -82,9 +88,9 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async updateUserById(
     @Param('id') userId: number,
-    @Body() updateUserDto: updateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserUpdateResponseDto | null> {
-    return this.usersService.updateUserById(userId, updateUserDto);
+    return this.updateUserFeature.execute(userId, updateUserDto);
   }
 
   @Delete(':id')
@@ -93,7 +99,7 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUserById(@Param('id') userId: number): Promise<void> {
-    return this.usersService.deleteUserById(userId);
+  async deleteUserById(@Param('id') id: number): Promise<void> {
+    await this.deleteUserByIdFeature.execute({ id });
   }
 }
