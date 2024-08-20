@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { ModelClass } from 'objection';
-import { UpdateFinanceDto } from '../../rest/finances/dto/update-finance.dto';
 import {
   ICreateFinance,
   IFinance,

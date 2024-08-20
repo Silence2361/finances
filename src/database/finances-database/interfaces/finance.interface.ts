@@ -22,24 +22,6 @@ export interface ICreateFinance {
   type: FinanceType;
 }
 
-export interface ICreateFinanceResponse {
-  id: number;
-}
-
-export interface IFindFinancesResponse {
-  finances: IFinanceDetails[];
-}
-
-export interface IFinanceDetails {
-  id: number;
-  amount: number;
-  date: string;
-  description?: string;
-  categoryId: number;
-  userId: number;
-  type: FinanceType;
-}
-
 export interface IUpdateFinance {
   id?: number;
   amount?: number;
@@ -48,29 +30,4 @@ export interface IUpdateFinance {
   categoryId?: number;
   userId?: number;
   type?: FinanceType;
-}
-
-export interface IUpdateFinanceResponse {
-  id: number;
-  amount: number;
-  date: string;
-  description?: string;
-  categoryId: number;
-  userId: number;
-  type: FinanceType;
-}
-
-export interface ICategoryStatistics {
-  categoryId: number;
-  totalAmount: number;
-}
-
-export interface ITotalStatistics {
-  type: string;
-  total: number;
-}
-
-export interface IMonthlyStatistics {
-  type: string;
-  total: number;
 }

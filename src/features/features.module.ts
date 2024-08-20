@@ -13,6 +13,9 @@ import { CreateFinanceModule } from './finances/create-finance/create-finance.mo
 import { UpdateFinanceByIdModule } from './finances/update-finance-by-id/update-finance-by-id.module';
 import { DeleteFinanceByIdModule } from './finances/delete-finance-by-id/delete-finance-by-id.module';
 import { FindFinancesModule } from './finances/find-finances/find-finances.module';
+import { FindCategoryStatisticsModule } from './finances/find-category-statistics/find-category-statistics.module';
+import { FindTotalStatisticsModule } from './finances/find-total-statistics/find-total-statistics.module';
+import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/find-monthly-statistics.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { FindFinancesModule } from './finances/find-finances/find-finances.modul
     UpdateFinanceByIdModule,
     DeleteFinanceByIdModule,
     FindFinancesModule,
+    FindCategoryStatisticsModule,
+    FindTotalStatisticsModule,
+    FindMonthlyStatisticsModule,
   ],
   exports: [
     CreateUserModule,
@@ -46,6 +52,9 @@ import { FindFinancesModule } from './finances/find-finances/find-finances.modul
     UpdateFinanceByIdModule,
     DeleteFinanceByIdModule,
     FindFinancesModule,
+    FindCategoryStatisticsModule,
+    FindTotalStatisticsModule,
+    FindMonthlyStatisticsModule,
   ],
 })
 export class FeaturesModule {}

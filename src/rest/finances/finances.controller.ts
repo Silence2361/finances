@@ -32,11 +32,13 @@ import {
 } from './dto/statistics-response.dto';
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 import { UserId } from '../common/decorators/user-id.decorator';
-import { FinancesQueryService } from './finances-query.service';
 import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
 import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
 import { DeleteFinanceByIdFeature } from '../../features/finances/delete-finance-by-id/delete-finance-by-id.feature';
 import { FindFinancesFeature } from '../../features/finances/find-finances/find-finances.feature';
+import { FindCategoryStatisticsFeature } from '../../features/finances/find-category-statistics/find-category-statistics.feature';
+import { FindTotalStatisticsFeature } from '../../features/finances/find-total-statistics/find-total-statistics.feature';
+import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
 
 @ApiTags('finances')
 @Controller('finances')
@@ -44,11 +46,13 @@ import { FindFinancesFeature } from '../../features/finances/find-finances/find-
 @ApiBearerAuth()
 export class FinancesController {
   constructor(
-    private readonly financesQueryService: FinancesQueryService,
     private readonly createFinanceFeature: CreateFinanceFeature,
     private readonly updateFinanceByIdFeature: UpdateFinanceByIdFeature,
     private readonly findFinancesFeature: FindFinancesFeature,
     private readonly deleteFinanceByIdFeature: DeleteFinanceByIdFeature,
+    private readonly findCategoryStatisticsFeature: FindCategoryStatisticsFeature,
+    private readonly findTotalStatisticsFeature: FindTotalStatisticsFeature,
+    private readonly findMonthlyStatisticsFeature: FindMonthlyStatisticsFeature,
   ) {}
 
   @Post()
@@ -122,7 +126,7 @@ export class FinancesController {
   async findCategoryStatistics(
     @UserId() userId: number,
   ): Promise<CategoryStatisticsResponseDto> {
-    return this.financesQueryService.findCategoryStatistics(userId);
+    return this.findCategoryStatisticsFeature.execute({ userId });
   }
 
   @Get('statistics/total')
@@ -133,7 +137,7 @@ export class FinancesController {
   async findTotalStatistics(
     @UserId() userId: number,
   ): Promise<TotalStatisticsResponseDto> {
-    return this.financesQueryService.findTotalStatistics(userId);
+    return this.findTotalStatisticsFeature.execute({ userId });
   }
 
   @Get('statistics/monthly')
@@ -146,6 +150,6 @@ export class FinancesController {
     @Query('month') month: number,
     @Query('year') year: number,
   ): Promise<MonthlyStatisticsResponseDto> {
-    return this.financesQueryService.findMonthlyStatistics(userId, month, year);
+    return this.findMonthlyStatisticsFeature.execute({ userId, month, year });
   }
 }
