@@ -10,7 +10,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import {
   ApiBearerAuth,
@@ -26,7 +25,11 @@ import { UpdateCategoryResponseDto } from './dto/update-category-response.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 import { CreateCategoryResponseDto } from './dto/create-category-response.dto';
-import { CategoriesQueryService } from './categories-query.service';
+import { CreateCategoryFeature } from '../../features/categories/create-category/create-category.feature';
+import { UpdateCategoryByIdFeature } from '../../features/categories/update-category-by-id/update-category-by-id.feature';
+import { GetCategoriesFeature } from '../../features/categories/get-categories/get-categories.feature';
+import { GetCategoryByIdFeature } from '../../features/categories/get-category-by-id/get-category-by-id.feature';
+import { DeleteCategoryByIdFeature } from '../../features/categories/delete-category-by-id/delete-category-by-id.features';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -34,8 +37,11 @@ import { CategoriesQueryService } from './categories-query.service';
 @ApiBearerAuth()
 export class CategoriesController {
   constructor(
-    private readonly categoriesService: CategoriesService,
-    private readonly categoriesQueryService: CategoriesQueryService,
+    private readonly createCategoryFeature: CreateCategoryFeature,
+    private readonly updateCategoryByIdFeature: UpdateCategoryByIdFeature,
+    private readonly getCategoriesFeature: GetCategoriesFeature,
+    private readonly getCategoryByIdFeature: GetCategoryByIdFeature,
+    private readonly deleteCategoryByIdFeature: DeleteCategoryByIdFeature,
   ) {}
 
   @Post()
@@ -47,7 +53,7 @@ export class CategoriesController {
   async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<CreateCategoryResponseDto> {
-    return this.categoriesService.createCategory(createCategoryDto);
+    return this.createCategoryFeature.execute(createCategoryDto);
   }
 
   @Get()
@@ -55,7 +61,7 @@ export class CategoriesController {
   @ApiOkResponse({ type: [CategoriesListResponseDto] })
   @ApiResponse({ status: 200, description: 'Categories returned successfully' })
   async findAllCategories(): Promise<CategoriesListResponseDto[]> {
-    return this.categoriesQueryService.findAllCategories();
+    return this.getCategoriesFeature.execute({});
   }
 
   @Get(':id')
@@ -63,9 +69,9 @@ export class CategoriesController {
   @ApiOkResponse({ type: CategoryByIdResponseDto })
   @ApiResponse({ status: 200, description: 'Category returned successfully' })
   async findCategoryById(
-    @Param('id') categoryId: number,
+    @Param('id') id: number,
   ): Promise<CategoryByIdResponseDto | null> {
-    return this.categoriesQueryService.findCategoryById(categoryId);
+    return this.getCategoryByIdFeature.execute({ id });
   }
 
   @Put(':id')
@@ -76,7 +82,7 @@ export class CategoriesController {
     @Param('id') categoryId: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<UpdateCategoryResponseDto | null> {
-    return this.categoriesService.updateCategoryById(
+    return this.updateCategoryByIdFeature.execute(
       categoryId,
       updateCategoryDto,
     );
@@ -86,7 +92,7 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Delete category' })
   @ApiResponse({ status: 204, description: 'Category deleted successfully' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteCategory(@Param('id') categoryId: number): Promise<void> {
-    await this.categoriesService.deleteCategoryById(categoryId);
+  async deleteCategory(@Param('id') id: number): Promise<void> {
+    await this.deleteCategoryByIdFeature.execute({ id });
   }
 }
