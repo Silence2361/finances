@@ -11,7 +11,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { FinancesService } from './finances.service';
 import { CreateFinanceDto } from './dto/create-finances.dto';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import {
@@ -34,6 +33,10 @@ import {
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 import { UserId } from '../common/decorators/user-id.decorator';
 import { FinancesQueryService } from './finances-query.service';
+import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
+import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
+import { DeleteFinanceByIdFeature } from '../../features/finances/delete-finance-by-id/delete-finance-by-id.feature';
+import { FindFinancesFeature } from '../../features/finances/find-finances/find-finances.feature';
 
 @ApiTags('finances')
 @Controller('finances')
@@ -41,8 +44,11 @@ import { FinancesQueryService } from './finances-query.service';
 @ApiBearerAuth()
 export class FinancesController {
   constructor(
-    private readonly financesService: FinancesService,
     private readonly financesQueryService: FinancesQueryService,
+    private readonly createFinanceFeature: CreateFinanceFeature,
+    private readonly updateFinanceByIdFeature: UpdateFinanceByIdFeature,
+    private readonly findFinancesFeature: FindFinancesFeature,
+    private readonly deleteFinanceByIdFeature: DeleteFinanceByIdFeature,
   ) {}
 
   @Post()
@@ -58,7 +64,7 @@ export class FinancesController {
     @Body() createFinanceDto: CreateFinanceDto,
     @UserId() userId: number,
   ): Promise<CreateFinanceResponseDto> {
-    return this.financesService.createFinance(createFinanceDto, userId);
+    return this.createFinanceFeature.execute(createFinanceDto, userId);
   }
 
   @Get()
@@ -72,7 +78,7 @@ export class FinancesController {
     @Query() query: FindFinancesQueryDto,
     @UserId() userId: number,
   ): Promise<FindFinancesListResponseDto> {
-    return this.financesQueryService.findFinances(userId, query?.type);
+    return this.findFinancesFeature.execute(userId, { type: query?.type });
   }
 
   @Put(':id')
@@ -87,7 +93,7 @@ export class FinancesController {
     @Body() updateFinanceDto: UpdateFinanceDto,
     @UserId() userId: number,
   ): Promise<UpdateFinanceResponseDto | null> {
-    return this.financesService.updateFinanceById(
+    return this.updateFinanceByIdFeature.execute(
       financeId,
       updateFinanceDto,
       userId,
@@ -102,10 +108,10 @@ export class FinancesController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteFinanceById(
-    @Param('id') financeId: number,
+    @Param('id') id: number,
     @UserId() userId: number,
   ): Promise<void> {
-    return this.financesService.deleteFinanceById(financeId, userId);
+    await this.deleteFinanceByIdFeature.execute({ id }, userId);
   }
 
   @Get('statistics/category')

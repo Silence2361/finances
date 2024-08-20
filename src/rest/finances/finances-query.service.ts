@@ -1,21 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ICategoryStatistics,
-  IFindFinancesResponse,
-} from '../../database/finances-database/interfaces/finance.interface';
+import { ICategoryStatistics } from '../../database/finances-database/interfaces/finance.interface';
 import { FinancesRepository } from '../../database/repositories/finance.repository';
 
 @Injectable()
 export class FinancesQueryService {
   constructor(private readonly financesRepository: FinancesRepository) {}
-
-  async findFinances(
-    userId: number,
-    type?: string,
-  ): Promise<IFindFinancesResponse> {
-    const finances = await this.financesRepository.findFinances(userId, type);
-    return { finances };
-  }
 
   async findCategoryStatistics(userId: number): Promise<ICategoryStatistics> {
     return this.financesRepository.findCategoryStatistics(userId);

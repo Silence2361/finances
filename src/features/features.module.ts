@@ -9,6 +9,10 @@ import { UpdateCategoryByIdModule } from './categories/update-category-by-id/upd
 import { GetCategoriesModule } from './categories/get-categories/get-categories.module';
 import { GetCategoryByIdModule } from './categories/get-category-by-id/get-category-by-id.module';
 import { DeleteCategoryByIdModule } from './categories/delete-category-by-id/delete-category-by-id.module';
+import { CreateFinanceModule } from './finances/create-finance/create-finance.module';
+import { UpdateFinanceByIdModule } from './finances/update-finance-by-id/update-finance-by-id.module';
+import { DeleteFinanceByIdModule } from './finances/delete-finance-by-id/delete-finance-by-id.module';
+import { FindFinancesModule } from './finances/find-finances/find-finances.module';
 
 @Module({
   imports: [
@@ -22,6 +26,10 @@ import { DeleteCategoryByIdModule } from './categories/delete-category-by-id/del
     GetCategoriesModule,
     GetCategoryByIdModule,
     DeleteCategoryByIdModule,
+    CreateFinanceModule,
+    UpdateFinanceByIdModule,
+    DeleteFinanceByIdModule,
+    FindFinancesModule,
   ],
   exports: [
     CreateUserModule,
@@ -34,6 +42,10 @@ import { DeleteCategoryByIdModule } from './categories/delete-category-by-id/del
     GetCategoriesModule,
     GetCategoryByIdModule,
     DeleteCategoryByIdModule,
+    CreateFinanceModule,
+    UpdateFinanceByIdModule,
+    DeleteFinanceByIdModule,
+    FindFinancesModule,
   ],
 })
 export class FeaturesModule {}
