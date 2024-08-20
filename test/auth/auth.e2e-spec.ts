@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpCode, HttpStatus, INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { User } from '../../src/users/users.model';
-import { Finance } from '../../src/finances/finances.model';
-import { Category } from '../../src/categories/categories.model';
+import { User } from '../../src/database/users-database/users.model';
+import { Finance } from '../../src/database/finances-database/finances.model';
+import { Category } from '../../src/database/categories-database/categories.model';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
