@@ -13,6 +13,7 @@ import { LoginUserFeature } from '../../features/auth/login-user/login-user.feat
 
 @ApiTags('auth')
 @Controller('auth')
+@ApiResponse({ status: 401, description: 'Unauthorized.' })
 export class AuthController {
   constructor(
     private readonly registerUserFeature: RegisterUserFeature,
@@ -36,7 +37,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Login a user' })
   @ApiOkResponse({ type: LoginResponseDto })
   @ApiResponse({ status: 200, description: 'Successfully logged in.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: AuthDto): Promise<LoginResponseDto> {
     return this.loginUserFeature.execute(dto);
