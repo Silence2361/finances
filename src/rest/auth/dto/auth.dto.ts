@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, MinLength, MaxLength } from 'class-validator';
+import { Trim } from '../../../common/decorators/trim.decorator';
 
 export class AuthDto {
   @ApiProperty({
@@ -16,5 +17,6 @@ export class AuthDto {
   @IsString()
   @MinLength(6)
   @MaxLength(16)
+  @Trim()
   password: string;
 }

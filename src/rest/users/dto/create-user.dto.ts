@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { UserRole } from '../../../database/users/users.model';
 import { Transform } from 'class-transformer';
+import { Trim } from '../../../common/decorators/trim.decorator';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -20,7 +21,7 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   @MaxLength(25)
-  @Transform(({ value }) => value.trim())
+  @Trim()
   password: string;
 
   @ApiProperty()
