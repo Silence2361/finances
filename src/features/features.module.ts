@@ -16,6 +16,8 @@ import { FindCategoryStatisticsModule } from './finances/find-category-statistic
 import { FindTotalStatisticsModule } from './finances/find-total-statistics/find-total-statistics.module';
 import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/find-monthly-statistics.module';
 import { UpdateUserByIdModule } from './users/update-user-by-id/update-user-by-id.module';
+import { RegisterUserModule } from './auth/register-user/register-user.module';
+import { LoginUserModule } from './auth/login-user/login-user.module';
 
 @Module({
   imports: [
