@@ -20,6 +20,7 @@ export class RegisterUserFeature {
     const { email, password } = params;
 
     const existingUser = await this.usersRepository.findUserByEmail(email);
+
     if (existingUser) {
       throw new ConflictException('Email already registered');
     }

@@ -33,7 +33,9 @@ export class LoginUserFeature {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Wrong Password');
     }
+
     const payload = { userId: user.id, role: user.role };
+
     const accessToken = await this.jwtService.signAsync(payload);
     return { accessToken };
   }
