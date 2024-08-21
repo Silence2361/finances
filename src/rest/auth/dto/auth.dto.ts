@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, MinLength, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  MinLength,
+  MaxLength,
+  IsEnum,
+} from 'class-validator';
 import { Trim } from '../../../common/decorators/trim.decorator';
+import { UserRole } from '../../../database/users/users.model';
 
 export class AuthDto {
   @ApiProperty({
@@ -19,4 +26,7 @@ export class AuthDto {
   @MaxLength(16)
   @Trim()
   password: string;
+
+  @IsEnum(UserRole)
+  role: UserRole;
 }
