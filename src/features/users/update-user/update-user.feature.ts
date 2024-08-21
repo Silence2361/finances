@@ -1,10 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../../database/users/user.repository';
 import * as bcrypt from 'bcryptjs';
-import {
-  UpdateUserFeatureParams,
-  UpdateUserFeatureResult,
-} from './update-user.types';
+import { UpdateUserFeatureParams } from './update-user.types';
 import { IUser } from '../../../database/users/user.interface';
 
 @Injectable()
@@ -14,8 +11,13 @@ export class UpdateUserFeature {
   async execute(
     userId: number,
     params: UpdateUserFeatureParams,
-  ): Promise<UpdateUserFeatureResult> {
+  ): Promise<void> {
     const { email, role, password } = params;
+
+    const user: IUser | null = await this.usersRepository.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
 
     let hashedPassword: string | undefined;
     if (password) {
@@ -28,19 +30,6 @@ export class UpdateUserFeature {
       password: hashedPassword || password,
     };
 
-    const user: IUser = await this.usersRepository.updateUserById(
-      userId,
-      updatedUserData,
-    );
-
-    if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
-    }
-
-    return {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    };
+    await this.usersRepository.updateUserById(userId, updatedUserData);
   }
 }

@@ -86,8 +86,8 @@ export class UserController {
   async updateUserById(
     @Param('id') userId: number,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserUpdateResponseDto | null> {
-    return this.updateUserFeature.execute(userId, updateUserDto);
+  ): Promise<void> {
+    await this.updateUserFeature.execute(userId, updateUserDto);
   }
 
   @Delete(':id')

@@ -26,11 +26,8 @@ export class UsersRepository {
     return this.userModel.query().findOne({ email });
   }
 
-  async updateUserById(
-    userId: number,
-    updateUser: IUpdateUser,
-  ): Promise<IUser | null> {
-    return this.userModel.query().patchAndFetchById(userId, updateUser);
+  async updateUserById(userId: number, updateUser: IUpdateUser): Promise<void> {
+    await this.userModel.query().patchAndFetchById(userId, updateUser);
   }
 
   async deleteUserById(userId: number): Promise<void> {

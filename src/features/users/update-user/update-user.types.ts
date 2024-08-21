@@ -5,9 +5,3 @@ export interface UpdateUserFeatureParams {
   password?: string;
   role?: UserRole;
 }
-
-export interface UpdateUserFeatureResult {
-  id: number;
-  email: string;
-  role: UserRole;
-}
