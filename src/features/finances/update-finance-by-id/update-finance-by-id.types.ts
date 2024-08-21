@@ -9,13 +9,3 @@ export interface UpdateFinanceByIdParams {
   userId?: number;
   type?: FinanceType;
 }
-
-export interface UpdateFinanceByIdResult {
-  id: number;
-  amount: number;
-  date: string;
-  description?: string;
-  categoryId: number;
-  userId: number;
-  type: FinanceType;
-}
