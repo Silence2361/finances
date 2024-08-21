@@ -22,7 +22,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserByIdResponseDto } from './dto/user-by-id-response.dto';
 import { UserCreateResponseDto } from './dto/user-create-response.dto';
-import { UserUpdateResponseDto } from './dto/user-update-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import { CreateUserFeature } from '../../features/users/create-user/create-user.feature';
@@ -80,7 +79,6 @@ export class UserController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update user by ID' })
-  @ApiOkResponse({ type: UserUpdateResponseDto })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   async updateUserById(

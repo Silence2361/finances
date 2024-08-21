@@ -8,15 +8,21 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserRole } from '../../../database/users/users.model';
-import { Transform } from 'class-transformer';
 import { Trim } from '../../../common/decorators/trim.decorator';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'user@example.com',
+    description: 'The email of the user',
+  })
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'password123',
+    description: 'The password of the user',
+  })
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
@@ -24,8 +30,9 @@ export class CreateUserDto {
   @Trim()
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: UserRole.USER, description: 'The role of the user' })
   @IsString()
   @IsEnum(UserRole)
+  @IsNotEmpty()
   role: UserRole;
 }
