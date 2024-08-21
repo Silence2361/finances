@@ -20,7 +20,7 @@ export class UpdateFinanceByIdFeature {
   async execute(
     financeId: number,
     params: UpdateFinanceByIdParams,
-  ): Promise<UpdateFinanceByIdResult | null> {
+  ): Promise<void> {
     const { categoryId, date, userId, ...rest } = params;
     const finance = await this.financesRepository.findFinanceById(financeId);
     if (!finance) {
@@ -44,11 +44,6 @@ export class UpdateFinanceByIdFeature {
       date: date ? new Date(date).toISOString() : finance.date,
     };
 
-    const result = await this.financesRepository.updateFinanceById(
-      financeId,
-      updatedFinance,
-    );
-
-    return result;
+    await this.financesRepository.updateFinanceById(financeId, updatedFinance);
   }
 }

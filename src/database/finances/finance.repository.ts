@@ -41,12 +41,11 @@ export class FinancesRepository {
   async updateFinanceById(
     financeId: number,
     updateFinance: IUpdateFinance,
-  ): Promise<IFinance | null> {
-    const finance: IFinance | null = await this.financeModel
+  ): Promise<void> {
+    await this.financeModel
       .query()
       .patchAndFetchById(financeId, updateFinance)
       .withGraphFetched('category');
-    return finance;
   }
 
   async deleteFinanceById(financeId: number): Promise<void> {

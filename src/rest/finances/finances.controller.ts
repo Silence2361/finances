@@ -24,7 +24,6 @@ import {
 import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { CreateFinanceResponseDto } from './dto/create-finance-response.dto';
 import { FindFinancesQueryDto } from './dto/find-finances-query.dto';
-import { UpdateFinanceResponseDto } from './dto/update-finance-response.dto';
 import {
   CategoryStatisticsResponseDto,
   MonthlyStatisticsResponseDto,
@@ -87,7 +86,7 @@ export class FinancesController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a finance record' })
-  @ApiOkResponse({ type: UpdateFinanceResponseDto })
+  @ApiOkResponse()
   @ApiResponse({
     status: 200,
     description: 'Finance record updated successfully',
@@ -96,8 +95,8 @@ export class FinancesController {
     @Param('id') financeId: number,
     @Body() updateFinanceDto: UpdateFinanceDto,
     @UserId() userId: number,
-  ): Promise<UpdateFinanceResponseDto | null> {
-    return this.updateFinanceByIdFeature.execute(financeId, {
+  ): Promise<void> {
+    await this.updateFinanceByIdFeature.execute(financeId, {
       ...updateFinanceDto,
       userId,
     });
