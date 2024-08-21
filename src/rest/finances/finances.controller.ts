@@ -32,9 +32,9 @@ import { DeleteFinanceByIdFeature } from '../../features/finances/delete-finance
 import { FindFinancesFeature } from '../../features/finances/find-finances/find-finances.feature';
 import { FindCategoryStatisticsFeature } from '../../features/finances/find-category-statistics/find-category-statistics.feature';
 import { FindTotalStatisticsFeature } from '../../features/finances/find-total-statistics/find-total-statistics.feature';
-import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
 import { StatisticsResponseDto } from './dto/statistics-response.dto';
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
+import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
 
 @ApiTags('finances')
 @Controller('finances')
