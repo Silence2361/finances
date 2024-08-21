@@ -18,6 +18,7 @@ export class RegisterUserFeature {
     params: RegisterUserFeatureParams,
   ): Promise<RegisterUserFeatureResult> {
     const { email, password } = params;
+
     const existingUser = await this.usersRepository.findUserByEmail(email);
     if (existingUser) {
       throw new ConflictException('Email already registered');
@@ -30,7 +31,7 @@ export class RegisterUserFeature {
       password: hashedPassword,
       role: UserRole.USER,
     });
-    const { id, role } = user;
-    return { email, role, id };
+
+    return { id: user.id, email: user.email, role: user.role };
   }
 }
