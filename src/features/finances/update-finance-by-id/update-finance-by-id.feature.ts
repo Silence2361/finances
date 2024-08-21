@@ -22,13 +22,17 @@ export class UpdateFinanceByIdFeature {
     params: UpdateFinanceByIdParams,
   ): Promise<void> {
     const { categoryId, date, userId, ...rest } = params;
+
     const finance = await this.financesRepository.findFinanceById(financeId);
+
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
+
     if (finance.userId !== userId) {
       throw new ForbiddenException();
     }
+
     if (categoryId) {
       const categoryExists =
         await this.categoriesRepository.findCategoryById(categoryId);

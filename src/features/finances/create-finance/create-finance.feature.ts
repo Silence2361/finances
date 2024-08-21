@@ -18,19 +18,23 @@ export class CreateFinanceFeature {
     params: CreateFinanceFeatureParams,
   ): Promise<CreateFinanceFeatureResult> {
     const { categoryId, date, userId, ...rest } = params;
+
     const finance: CreateFinanceFeatureParams = {
       ...rest,
       categoryId,
       userId,
       date: new Date(date).toISOString(),
     };
+
     const categoryExists =
       await this.categoriesRepository.findCategoryById(categoryId);
+
     if (!categoryExists) {
       throw new NotFoundException(`Category with id ${categoryId} not found`);
     }
 
     const createdFinance = await this.financesRepository.createFinance(finance);
+
     return { id: createdFinance.id };
   }
 }
