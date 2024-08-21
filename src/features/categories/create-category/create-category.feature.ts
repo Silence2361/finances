@@ -4,6 +4,7 @@ import {
   CreateCategoryFeatureResult,
 } from './create-category.types';
 import { CategoriesRepository } from '../../../database/categories/category.repository';
+import { ICategory } from '../../../database/categories/category.interface';
 
 @Injectable()
 export class CreateCategoryFeature {
@@ -19,7 +20,10 @@ export class CreateCategoryFeature {
       throw new ConflictException('Category already exists');
     }
 
-    const { id } = await this.categoriesRepository.createCategory({ name });
-    return { id };
+    const createCategory: ICategory =
+      await this.categoriesRepository.createCategory({
+        name,
+      });
+    return { id: createCategory.id };
   }
 }
