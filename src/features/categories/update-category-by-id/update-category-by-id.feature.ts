@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
-import { ICategory } from '../../../database/categories-database/interfaces/category.interface';
+import { ICategory } from '../../../database/categories/category.interface';
 import {
   UpdateCategoryByIdFeatureParams,
   UpdateCategoryByIdFeatureResult,
 } from './update-category-by-id.types';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class UpdateCategoryByIdFeature {

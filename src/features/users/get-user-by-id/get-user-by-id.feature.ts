@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IUser } from '../../../database/users-database/interfaces/user.interface';
-import { UsersRepository } from '../../../database/repositories/user.repository';
+import { UsersRepository } from '../../../database/users/user.repository';
 import {
   GetUserByIdFeatureParams,
   GetUserByIdFeatureResult,
 } from './get-user-by-id.types';
+import { IUser } from '../../../database/users/user.interface';
 
 @Injectable()
 export class GetUserByIdFeature {

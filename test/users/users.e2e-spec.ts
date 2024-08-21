@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { User } from '../../src/database/users-database/users.model';
+import { User } from '../../src/database/users/users.model';
 
 describe('UserController (e2e) - Create User', () => {
   let app: INestApplication;

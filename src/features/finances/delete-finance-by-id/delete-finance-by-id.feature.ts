@@ -3,11 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { FinancesRepository } from '../../../database/repositories/finance.repository';
 import {
   DeleteFinanceByIdFeatureParams,
   DeleteFinanceByIdFeatureResult,
 } from './delete-finance-by-id.types';
+import { FinancesRepository } from '../../../database/finances/finance.repository';
 
 @Injectable()
 export class DeleteFinanceByIdFeature {

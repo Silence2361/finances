@@ -1,11 +1,11 @@
 import { Module, Global } from '@nestjs/common';
 import { ObjectionModule } from 'nestjs-objection';
-import { UsersRepository } from './user.repository';
-import { User } from '../../database/users-database/users.model';
-import { CategoriesRepository } from './category.repository';
-import { Category } from '../../database/categories-database/categories.model';
-import { Finance } from '../finances-database/finances.model';
-import { FinancesRepository } from './finance.repository';
+import { UsersRepository } from './users/user.repository';
+import { User } from './users/users.model';
+import { CategoriesRepository } from './categories/category.repository';
+import { Category } from './categories/categories.model';
+import { Finance } from './finances/finances.model';
+import { FinancesRepository } from './finances/finance.repository';
 
 @Global()
 @Module({

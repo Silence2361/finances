@@ -1,6 +1,6 @@
 import { Model } from 'objection';
-import { User } from '../users-database/users.model';
-import { Category } from '../categories-database/categories.model';
+import { User } from '../users/users.model';
+import { Category } from '../categories/categories.model';
 
 export enum FinanceType {
   INCOME = 'income',

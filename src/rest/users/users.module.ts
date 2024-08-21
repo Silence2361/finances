@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ObjectionModule } from 'nestjs-objection';
-import { User } from '../../database/users-database/users.model';
+import { User } from '../../database/users/users.model';
 import { UserController } from './users.controller';
-import { UsersRepository } from '../../database/repositories/user.repository';
-import { DatabaseModule } from '../../database/repositories/repositories.module';
+import { UsersRepository } from '../../database/users/user.repository';
+import { DatabaseModule } from '../../database/database.module';
 import { FeaturesModule } from '../../features/features.module';
 
 @Module({

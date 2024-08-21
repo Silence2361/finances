@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { IUser } from '../../database/users-database/interfaces/user.interface';
-import { UsersRepository } from '../../database/repositories/user.repository';
-import { UserRole } from '../../database/users-database/users.model';
+import { UsersRepository } from '../../database/users/user.repository';
+import { UserRole } from '../../database/users/users.model';
 import {
   ILoginCredentials,
   ILoginResponse,
   IRegisterCredentials,
   IRegisterResponse,
-} from '../../database/auth-database/interfaces/auth-response.interface';
+} from '../../database/auth/auth-response.interface';
+import { IUser } from '../../database/users/user.interface';
 
 @Injectable()
 export class AuthService {

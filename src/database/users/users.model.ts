@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { Finance } from '../finances-database/finances.model';
+import { Finance } from '../finances/finances.model';
 
 export enum UserRole {
   USER = 'user',

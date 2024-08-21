@@ -31,7 +31,7 @@ import {
   TotalStatisticsResponseDto,
 } from './dto/statistics-response.dto';
 import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
-import { UserId } from '../common/decorators/user-id.decorator';
+import { UserId } from '../../common/decorators/user-id.decorator';
 import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
 import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
 import { DeleteFinanceByIdFeature } from '../../features/finances/delete-finance-by-id/delete-finance-by-id.feature';

@@ -5,7 +5,7 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
-import { FinanceType } from '../../../database/finances-database/finances.model';
+import { FinanceType } from '../../../database/finances/finances.model';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateFinanceDto {

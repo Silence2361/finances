@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { ModelClass } from 'objection';
-import {
-  ICreateFinance,
-  IFinance,
-  IUpdateFinance,
-} from '../finances-database/interfaces/finance.interface';
-import { Finance } from '../finances-database/finances.model';
+import { ICreateFinance, IFinance, IUpdateFinance } from './finance.interface';
+import { Finance } from '../finances/finances.model';
 
 @Injectable()
 export class FinancesRepository {

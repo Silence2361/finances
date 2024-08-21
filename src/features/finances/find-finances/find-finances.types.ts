@@ -1,4 +1,4 @@
-import { IFinance } from '../../../database/finances-database/interfaces/finance.interface';
+import { IFinance } from '../../../database/finances/finance.interface';
 
 export interface FindFinancesFeatureParams {
   userId: number;

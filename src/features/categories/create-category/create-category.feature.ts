@@ -1,9 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
 import {
   CreateCategoryFeatureParams,
   CreateCategoryFeatureResult,
 } from './create-category.types';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class CreateCategoryFeature {

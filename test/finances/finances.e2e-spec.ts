@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { Finance } from '../../src/database/finances-database/finances.model';
-import { Category } from '../../src/database/categories-database/categories.model';
-import { User } from '../../src/database/users-database/users.model';
+import { Finance } from '../../src/database/finances/finances.model';
+import { Category } from '../../src/database/categories/categories.model';
+import { User } from '../../src/database/users/users.model';
 
 describe('FinancesController (e2e) - Finances', () => {
   let app: INestApplication;

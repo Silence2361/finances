@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
 import {
   GetCategoriesFeatureParams,
   GetCategoriesFeatureResult,
 } from './get-categories.types';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class GetCategoriesFeature {

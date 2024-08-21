@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { Category } from '../../src/database/categories-database/categories.model';
+import { Category } from '../../src/database/categories/categories.model';
 
 describe('CategoryController (e2e) - Categories', () => {
   let app: INestApplication;

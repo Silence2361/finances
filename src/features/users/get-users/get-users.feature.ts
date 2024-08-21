@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '../../../database/repositories/user.repository';
-import { IUser } from '../../../database/users-database/interfaces/user.interface';
+import { UsersRepository } from '../../../database/users/user.repository';
 import {
   GetUsersFeatureParams,
   GetUsersFeatureResult,
 } from './get-users.types';
+import { IUser } from '../../../database/users/user.interface';
 
 @Injectable()
 export class GetUsersFeature {

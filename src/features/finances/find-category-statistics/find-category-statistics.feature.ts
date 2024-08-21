@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FinancesRepository } from '../../../database/repositories/finance.repository';
 import { FindCategoryStatisticsFeatureParams } from './find-category-statistics.types';
+import { FinancesRepository } from '../../../database/finances/finance.repository';
 
 @Injectable()
 export class FindCategoryStatisticsFeature {

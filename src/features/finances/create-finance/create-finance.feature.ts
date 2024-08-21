@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { FinancesRepository } from '../../../database/repositories/finance.repository';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
 import {
   CreateFinanceFeatureParams,
   CreateFinanceFeatureResult,
 } from './create-finance.types';
+import { FinancesRepository } from '../../../database/finances/finance.repository';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class CreateFinanceFeature {

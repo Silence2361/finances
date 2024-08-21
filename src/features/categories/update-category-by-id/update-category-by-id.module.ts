@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UpdateCategoryByIdFeature } from './update-category-by-id.feature';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Module({
   providers: [UpdateCategoryByIdFeature, CategoriesRepository],

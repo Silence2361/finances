@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
-import { User } from '../users-database/users.model';
+import { User } from './users.model';
 import { ModelClass } from 'objection';
-import {
-  ICreateUser,
-  IUpdateUser,
-  IUser,
-} from '../users-database/interfaces/user.interface';
+import { ICreateUser, IUpdateUser, IUser } from './user.interface';
 
 @Injectable()
 export class UsersRepository {

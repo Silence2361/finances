@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ObjectionModule } from 'nestjs-objection';
-import { Category } from '../../database/categories-database/categories.model';
+import { Category } from '../../database/categories/categories.model';
 import { CategoriesController } from './categories.controller';
-import { DatabaseModule } from '../../database/repositories/repositories.module';
-import { CategoriesRepository } from '../../database/repositories/category.repository';
+import { DatabaseModule } from '../../database/database.module';
 import { FeaturesModule } from '../../features/features.module';
+import { CategoriesRepository } from '../../database/categories/category.repository';
 
 @Module({
   imports: [

@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { FinancesRepository } from '../../../database/repositories/finance.repository';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
 import {
   UpdateFinanceByIdParams,
   UpdateFinanceByIdResult,
 } from './update-finance-by-id.types';
+import { FinancesRepository } from '../../../database/finances/finance.repository';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class UpdateFinanceByIdFeature {

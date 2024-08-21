@@ -7,7 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UserRole } from '../../../database/users-database/users.model';
+import { UserRole } from '../../../database/users/users.model';
 import { Transform } from 'class-transformer';
 
 export class CreateUserDto {

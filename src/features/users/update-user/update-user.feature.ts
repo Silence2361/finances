@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UsersRepository } from '../../../database/repositories/user.repository';
+import { UsersRepository } from '../../../database/users/user.repository';
 import * as bcrypt from 'bcryptjs';
 import {
   UpdateUserFeatureParams,
   UpdateUserFeatureResult,
 } from './update-user.types';
-import { IUser } from '../../../database/users-database/interfaces/user.interface';
+import { IUser } from '../../../database/users/user.interface';
 
 @Injectable()
 export class UpdateUserFeature {

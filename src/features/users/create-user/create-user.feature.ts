@@ -1,12 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { UsersRepository } from '../../../database/repositories/user.repository';
+import { UsersRepository } from '../../../database/users/user.repository';
 
 import {
   CreateUserFeatureParams,
   CreateUserFeatureResult,
 } from './create-user.types';
-import { IUser } from '../../../database/users-database/interfaces/user.interface';
+import { IUser } from '../../../database/users/user.interface';
 
 @Injectable()
 export class CreateUserFeature {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FinancesRepository } from '../../../database/repositories/finance.repository';
 import { FindTotalStatisticsFeatureParams } from './find-total-statistics.types';
+import { FinancesRepository } from '../../../database/finances/finance.repository';
 
 @Injectable()
 export class FindTotalStatisticsFeature {

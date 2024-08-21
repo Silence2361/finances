@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UsersRepository } from '../../../database/repositories/user.repository';
+import { UsersRepository } from '../../../database/users/user.repository';
 import {
   DeleteUserByIdFeatureParams,
   DeleteUserByIdFeatureResult,

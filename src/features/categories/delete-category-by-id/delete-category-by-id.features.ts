@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CategoriesRepository } from '../../../database/repositories/category.repository';
 import {
   DeleteCategoryByIdFeatureParams,
   DeleteCategoryByIdFeatureResult,
 } from './delete-category-by-id.types';
+import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class DeleteCategoryByIdFeature {

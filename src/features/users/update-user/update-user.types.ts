@@ -1,4 +1,4 @@
-import { UserRole } from '../../../database/users-database/users.model';
+import { UserRole } from '../../../database/users/users.model';
 
 export interface UpdateUserFeatureParams {
   email?: string;

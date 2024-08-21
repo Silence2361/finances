@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection/dist';
 import { ModelClass } from 'objection';
-import { Category } from '../categories-database/categories.model';
+import { Category } from '../categories/categories.model';
 import {
   ICategory,
   ICreateCategory,
   IUpdateCategory,
-} from '../categories-database/interfaces/category.interface';
+} from './category.interface';
 
 @Injectable()
 export class CategoriesRepository {
