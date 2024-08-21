@@ -21,11 +21,10 @@ export class GetUserByIdFeature {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    const { id: userId, email, role } = user;
     return {
-      id: userId,
-      email,
-      role,
+      id: user.id,
+      email: user.email,
+      role: user.role,
     };
   }
 }
