@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import {
@@ -21,7 +25,7 @@ export class LoginUserFeature {
 
     const user = await this.usersRepository.findUserByEmail(email);
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new NotFoundException('User not found');
     }
 
     const isCorrectPassword = await bcrypt.compare(password, user.password);
@@ -29,9 +33,8 @@ export class LoginUserFeature {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Wrong Password');
     }
-    const { id, role } = user;
-    const payload = { userId: id, role };
-    const access_token = await this.jwtService.signAsync(payload);
-    return { access_token };
+    const payload = { userId: user.id, role: user.role };
+    const accessToken = await this.jwtService.signAsync(payload);
+    return { accessToken };
   }
 }
