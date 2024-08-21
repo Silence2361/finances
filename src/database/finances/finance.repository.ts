@@ -66,7 +66,7 @@ export class FinancesRepository {
     return this.financeModel
       .query()
       .select('type')
-      .sum('amount as total')
+      .sum('amount as totalAmount')
       .where('userId', userId)
       .groupBy('type');
   }
@@ -79,7 +79,7 @@ export class FinancesRepository {
     return this.financeModel
       .query()
       .select('type')
-      .sum('amount as total')
+      .sum('amount as totalAmount')
       .where('userId', userId)
       .andWhereRaw('EXTRACT(MONTH FROM date) = ?', [month])
       .andWhereRaw('EXTRACT(YEAR FROM date) = ?', [year])

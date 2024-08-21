@@ -24,12 +24,7 @@ import {
 import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { CreateFinanceResponseDto } from './dto/create-finance-response.dto';
 import { FindFinancesQueryDto } from './dto/find-finances-query.dto';
-import {
-  CategoryStatisticsResponseDto,
-  MonthlyStatisticsResponseDto,
-  TotalStatisticsResponseDto,
-} from './dto/statistics-response.dto';
-import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
+
 import { UserId } from '../../common/decorators/user-id.decorator';
 import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
 import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
@@ -38,11 +33,14 @@ import { FindFinancesFeature } from '../../features/finances/find-finances/find-
 import { FindCategoryStatisticsFeature } from '../../features/finances/find-category-statistics/find-category-statistics.feature';
 import { FindTotalStatisticsFeature } from '../../features/finances/find-total-statistics/find-total-statistics.feature';
 import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
+import { StatisticsResponseDto } from './dto/statistics-response.dto';
+import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 
 @ApiTags('finances')
 @Controller('finances')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@ApiResponse({ status: 401, description: 'Unauthorized' })
 export class FinancesController {
   constructor(
     private readonly createFinanceFeature: CreateFinanceFeature,
@@ -118,36 +116,33 @@ export class FinancesController {
 
   @Get('statistics/category')
   @ApiOperation({ summary: 'Get statisctics by category' })
-  @ApiOkResponse({ type: CategoryStatisticsResponseDto })
+  @ApiOkResponse({ type: StatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return statistics by category' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findCategoryStatistics(
     @UserId() userId: number,
-  ): Promise<CategoryStatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto> {
     return this.findCategoryStatisticsFeature.execute({ userId });
   }
 
   @Get('statistics/total')
   @ApiOperation({ summary: 'Get total statisctics' })
-  @ApiOkResponse({ type: TotalStatisticsResponseDto })
+  @ApiOkResponse({ type: StatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return total statistics ' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findTotalStatistics(
     @UserId() userId: number,
-  ): Promise<TotalStatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto> {
     return this.findTotalStatisticsFeature.execute({ userId });
   }
 
   @Get('statistics/monthly')
   @ApiOperation({ summary: 'Get monthly statisctics' })
-  @ApiOkResponse({ type: MonthlyStatisticsResponseDto })
+  @ApiOkResponse({ type: StatisticsResponseDto })
   @ApiResponse({ status: 200, description: 'Return monthly statistics' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findMonthlyStatistics(
     @UserId() userId: number,
     @Query('month') month: number,
     @Query('year') year: number,
-  ): Promise<MonthlyStatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto> {
     return this.findMonthlyStatisticsFeature.execute({ userId, month, year });
   }
 }
