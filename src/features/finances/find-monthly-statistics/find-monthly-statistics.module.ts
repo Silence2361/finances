@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { FindMonthlyStatisticsFeature } from './find-monthly-statistics.feature';
-import { FinancesRepository } from '../../../database/finances/finance.repository';
 
 @Module({
-  providers: [FindMonthlyStatisticsFeature, FinancesRepository],
+  providers: [FindMonthlyStatisticsFeature],
   exports: [FindMonthlyStatisticsFeature],
 })
 export class FindMonthlyStatisticsModule {}
