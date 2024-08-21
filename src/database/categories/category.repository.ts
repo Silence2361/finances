@@ -33,8 +33,8 @@ export class CategoriesRepository {
   async updateCategoryById(
     categoryId: number,
     updateCategory: IUpdateCategory,
-  ): Promise<ICategory | null> {
-    return this.categoryModel
+  ): Promise<void> {
+    await this.categoryModel
       .query()
       .patchAndFetchById(categoryId, updateCategory);
   }

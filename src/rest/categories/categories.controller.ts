@@ -81,11 +81,8 @@ export class CategoriesController {
   async updateCategoryById(
     @Param('id') categoryId: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<UpdateCategoryResponseDto | null> {
-    return this.updateCategoryByIdFeature.execute(
-      categoryId,
-      updateCategoryDto,
-    );
+  ): Promise<void> {
+    await this.updateCategoryByIdFeature.execute(categoryId, updateCategoryDto);
   }
 
   @Delete(':id')
