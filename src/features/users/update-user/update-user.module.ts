@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { UpdateUserFeature } from './update-user.feature';
-import { UsersRepository } from '../../../database/users/user.repository';
 
 @Module({
-  providers: [UpdateUserFeature, UsersRepository],
+  providers: [UpdateUserFeature],
   exports: [UpdateUserFeature],
 })
 export class UpdateUserModule {}

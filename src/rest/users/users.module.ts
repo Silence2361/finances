@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ObjectionModule } from 'nestjs-objection';
-import { User } from '../../database/users/users.model';
 import { UserController } from './users.controller';
-import { UsersRepository } from '../../database/users/user.repository';
-import { DatabaseModule } from '../../database/database.module';
 import { FeaturesModule } from '../../features/features.module';
+import { DatabaseModule } from '../../database/database.module';
 
 @Module({
-  imports: [ObjectionModule.forFeature([User]), DatabaseModule, FeaturesModule],
-  providers: [UsersRepository],
+  imports: [DatabaseModule, FeaturesModule],
   controllers: [UserController],
-  exports: [ObjectionModule, UsersRepository],
 })
 export class UsersModule {}
