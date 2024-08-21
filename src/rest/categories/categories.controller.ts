@@ -21,7 +21,6 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { UpdateCategoryResponseDto } from './dto/update-category-response.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 import { CreateCategoryResponseDto } from './dto/create-category-response.dto';
@@ -76,7 +75,7 @@ export class CategoriesController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a category' })
-  @ApiOkResponse({ type: UpdateCategoryResponseDto })
+  @ApiOkResponse()
   @ApiResponse({ status: 200, description: 'Category updated successfully' })
   async updateCategoryById(
     @Param('id') categoryId: number,
