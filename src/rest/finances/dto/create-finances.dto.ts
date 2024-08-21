@@ -4,6 +4,7 @@ import {
   IsString,
   IsEnum,
   IsOptional,
+  Min,
 } from 'class-validator';
 import { FinanceType } from '../../../database/finances/finances.model';
 import { ApiProperty } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ export class CreateFinanceDto {
   })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0, { message: 'Amount cannot be negative' })
   amount: number;
 
   @ApiProperty({
