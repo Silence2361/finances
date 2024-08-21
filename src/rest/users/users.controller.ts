@@ -35,6 +35,7 @@ import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/de
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@ApiResponse({ status: 401, description: 'Unauthorized' })
 export class UserController {
   constructor(
     private readonly createUserFeature: CreateUserFeature,
@@ -49,7 +50,6 @@ export class UserController {
   @ApiCreatedResponse({ type: UserCreateResponseDto })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @HttpCode(HttpStatus.CREATED)
   async createUser(
     @Body() createUserDto: CreateUserDto,
@@ -61,7 +61,6 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [UsersListResponseDto] })
   @ApiResponse({ status: 200, description: 'Users returned successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findAll(): Promise<UsersListResponseDto[]> {
     return this.getUsersFeature.execute({});
   }
@@ -73,7 +72,6 @@ export class UserController {
     status: 200,
     description: 'Successfully returned user profile.',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findUserById(
     @Param('id') id: number,
   ): Promise<UserByIdResponseDto | null> {
@@ -85,7 +83,6 @@ export class UserController {
   @ApiOkResponse({ type: UserUpdateResponseDto })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async updateUserById(
     @Param('id') userId: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -96,7 +93,6 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 204, description: 'User deleted successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUserById(@Param('id') id: number): Promise<void> {
