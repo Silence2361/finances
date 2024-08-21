@@ -1,17 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../../database/users/user.repository';
-import {
-  DeleteUserByIdFeatureParams,
-  DeleteUserByIdFeatureResult,
-} from './delete-user-by-id.types';
+import { DeleteUserByIdFeatureParams } from './delete-user-by-id.types';
 
 @Injectable()
 export class DeleteUserByIdFeature {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async execute(
-    params: DeleteUserByIdFeatureParams,
-  ): Promise<DeleteUserByIdFeatureResult> {
+  async execute(params: DeleteUserByIdFeatureParams): Promise<void> {
     const { id } = params;
 
     const user = await this.usersRepository.findUserById(id);
@@ -20,7 +15,5 @@ export class DeleteUserByIdFeature {
     }
 
     await this.usersRepository.deleteUserById(id);
-
-    return { success: true };
   }
 }

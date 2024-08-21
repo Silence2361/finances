@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UpdateUserModule } from './users/update-user/update-user.module';
 import { CreateUserModule } from './users/create-user/create-user.module';
 import { GetUsersModule } from './users/get-users/get-users.module';
 import { GetUserByIdModule } from './users/get-user-by-id/get-user-by-id.module';
@@ -16,13 +15,12 @@ import { FindFinancesModule } from './finances/find-finances/find-finances.modul
 import { FindCategoryStatisticsModule } from './finances/find-category-statistics/find-category-statistics.module';
 import { FindTotalStatisticsModule } from './finances/find-total-statistics/find-total-statistics.module';
 import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/find-monthly-statistics.module';
-import { RegisterUserModule } from './auth/register-user/register-user.module';
-import { LoginUserModule } from './auth/login-user/login-user.module';
+import { UpdateUserByIdModule } from './users/update-user-by-id/update-user-by-id.module';
 
 @Module({
   imports: [
     CreateUserModule,
-    UpdateUserModule,
+    UpdateUserByIdModule,
     GetUsersModule,
     GetUserByIdModule,
     DeleteUserByIdModule,
@@ -43,7 +41,7 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
   ],
   exports: [
     CreateUserModule,
-    UpdateUserModule,
+    UpdateUserByIdModule,
     GetUsersModule,
     GetUserByIdModule,
     DeleteUserByIdModule,

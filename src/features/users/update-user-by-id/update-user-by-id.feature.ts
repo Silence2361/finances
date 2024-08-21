@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../../database/users/user.repository';
 import * as bcrypt from 'bcryptjs';
-import { UpdateUserFeatureParams } from './update-user.types';
 import { IUser } from '../../../database/users/user.interface';
+import { UpdateUserByIdFeatureParams } from './update-user-by-id.types';
 
 @Injectable()
-export class UpdateUserFeature {
+export class UpdateUserByIdFeature {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(
     userId: number,
-    params: UpdateUserFeatureParams,
+    params: UpdateUserByIdFeatureParams,
   ): Promise<void> {
     const { email, role, password } = params;
 
