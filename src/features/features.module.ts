@@ -16,6 +16,8 @@ import { FindFinancesModule } from './finances/find-finances/find-finances.modul
 import { FindCategoryStatisticsModule } from './finances/find-category-statistics/find-category-statistics.module';
 import { FindTotalStatisticsModule } from './finances/find-total-statistics/find-total-statistics.module';
 import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/find-monthly-statistics.module';
+import { RegisterUserModule } from './auth/register-user/register-user.module';
+import { LoginUserModule } from './auth/login-user/login-user.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/
     FindCategoryStatisticsModule,
     FindTotalStatisticsModule,
     FindMonthlyStatisticsModule,
+    RegisterUserModule,
+    LoginUserModule,
   ],
   exports: [
     CreateUserModule,
@@ -55,6 +59,8 @@ import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/
     FindCategoryStatisticsModule,
     FindTotalStatisticsModule,
     FindMonthlyStatisticsModule,
+    RegisterUserModule,
+    LoginUserModule,
   ],
 })
 export class FeaturesModule {}

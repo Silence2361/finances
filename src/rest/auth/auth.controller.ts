@@ -1,5 +1,4 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import {
   ApiOkResponse,
@@ -9,11 +8,16 @@ import {
 } from '@nestjs/swagger';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
+import { RegisterUserFeature } from '../../features/auth/register-user/register-user.feature';
+import { LoginUserFeature } from '../../features/auth/login-user/login-user.feature';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly registerUserFeature: RegisterUserFeature,
+    private readonly loginUserFeature: LoginUserFeature,
+  ) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Registration of new user' })
@@ -25,7 +29,7 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() dto: AuthDto): Promise<RegisterResponseDto> {
-    return this.authService.register(dto);
+    return this.registerUserFeature.execute(dto);
   }
 
   @Post('login')
@@ -35,6 +39,6 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: AuthDto): Promise<LoginResponseDto> {
-    return this.authService.login(dto);
+    return this.loginUserFeature.execute(dto);
   }
 }
