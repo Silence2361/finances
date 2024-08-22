@@ -18,3 +18,7 @@ export interface IUpdateUser {
   password?: string;
   role?: UserRole;
 }
+
+export interface IUsersCount {
+  count: number;
+}

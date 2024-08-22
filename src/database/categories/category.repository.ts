@@ -26,6 +26,12 @@ export class CategoriesRepository {
     return this.categoryModel.query().findById(categoryId);
   }
 
+  async categoriesCount(): Promise<number> {
+    const result: any = await this.categoryModel.query().count('id as count');
+    return result[0].count;
+    // [{count : number}]
+  }
+
   async findCategoryByName(name: string): Promise<ICategory | null> {
     return this.categoryModel.query().findOne({ name });
   }

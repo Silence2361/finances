@@ -11,7 +11,7 @@ import { PaginationQueryDto } from '../../../rest/users/dto/pagination-query.dto
 export class GetUsersFeature {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async execute(params: PaginationQueryDto): Promise<GetUsersFeatureResult[]> {
+  async execute(params: PaginationQueryDto): Promise<any> {
     const { page = 1, pageSize = 10 } = params;
 
     const offset = (page - 1) * pageSize;
@@ -21,10 +21,14 @@ export class GetUsersFeature {
       limit: pageSize,
     });
 
-    return users.map(({ id, email, role }) => ({
-      id,
-      email,
-      role,
-    }));
+    const count = await this.userRepository.usersCount();
+    return {
+      docs: users.map(({ id, email, role }) => ({
+        id,
+        email,
+        role,
+      })),
+      count,
+    };
   }
 }

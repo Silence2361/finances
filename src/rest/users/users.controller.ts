@@ -30,6 +30,7 @@ import { GetUsersFeature } from '../../features/users/get-users/get-users.featur
 import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user-by-id.feature';
 import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { UpdateUserByIdFeature } from '../../features/users/update-user-by-id/update-user-by-id.feature';
 
 @ApiTags('users')
 @Controller('users')
@@ -64,7 +65,6 @@ export class UserController {
   async findAll(
     @Query() paginationQuery: PaginationQueryDto,
   ): Promise<UsersListResponseDto[]> {
-    console.log('Received pagination parameters:', paginationQuery);
     return this.getUsersFeature.execute(paginationQuery);
   }
 

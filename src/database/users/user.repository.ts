@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { User } from './users.model';
 import { ModelClass } from 'objection';
-import { ICreateUser, IUpdateUser, IUser } from './user.interface';
+import { ICreateUser, IUpdateUser, IUser, IUsersCount } from './user.interface';
+import { castTo } from '../../common/utils/type-utils';
 
 @Injectable()
 export class UsersRepository {
@@ -26,6 +27,15 @@ export class UsersRepository {
 
   async findUserById(userId: number): Promise<IUser | null> {
     return this.userModel.query().findById(userId);
+  }
+
+  async usersCount(): Promise<number> {
+    const result = await this.userModel
+      .query()
+      .count('id as count')
+      .castTo<IUsersCount[]>();
+
+    return result[0].count;
   }
 
   async findUserByEmail(email: string): Promise<IUser | null> {

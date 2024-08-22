@@ -47,6 +47,12 @@ export class FinancesRepository {
     return finance;
   }
 
+  async categoriesCount(): Promise<number> {
+    const result: any = await this.financeModel.query().count('id as count');
+    return result[0].count;
+    // [{count : number}]
+  }
+
   async updateFinanceById(
     financeId: number,
     updateFinance: IUpdateFinance,
