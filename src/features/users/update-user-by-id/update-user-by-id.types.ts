@@ -1,6 +1,6 @@
 import { UserRole } from '../../../database/users/users.model';
 
-export interface UpdateUserFeatureParams {
+export interface UpdateUserByIdFeatureParams {
   email?: string;
   password?: string;
   role?: UserRole;

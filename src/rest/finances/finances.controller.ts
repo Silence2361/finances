@@ -120,7 +120,7 @@ export class FinancesController {
   @ApiResponse({ status: 200, description: 'Return statistics by category' })
   async findCategoryStatistics(
     @UserId() userId: number,
-  ): Promise<StatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto[]> {
     return this.findCategoryStatisticsFeature.execute({ userId });
   }
 
@@ -130,7 +130,7 @@ export class FinancesController {
   @ApiResponse({ status: 200, description: 'Return total statistics ' })
   async findTotalStatistics(
     @UserId() userId: number,
-  ): Promise<StatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto[]> {
     return this.findTotalStatisticsFeature.execute({ userId });
   }
 
@@ -142,7 +142,7 @@ export class FinancesController {
     @UserId() userId: number,
     @Query('month') month: number,
     @Query('year') year: number,
-  ): Promise<StatisticsResponseDto> {
+  ): Promise<StatisticsResponseDto[]> {
     return this.findMonthlyStatisticsFeature.execute({ userId, month, year });
   }
 }

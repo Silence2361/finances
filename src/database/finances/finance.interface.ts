@@ -1,3 +1,5 @@
+import { ICategory } from '../categories/category.interface';
+
 export interface IFinance {
   id: number;
   amount: number;
@@ -30,4 +32,23 @@ export interface IUpdateFinance {
   categoryId?: number;
   userId?: number;
   type?: FinanceType;
+}
+
+export interface ICategoryStatistics {
+  type: FinanceType;
+  categoryId: number;
+  totalAmount: number;
+  category: ICategory;
+}
+
+export interface ITotalStatistics {
+  type: FinanceType;
+  categoryId: number;
+  totalAmount: number;
+}
+
+export interface IMonthlyStatistics {
+  type: FinanceType;
+  categoryId: number;
+  totalAmount: number;
 }

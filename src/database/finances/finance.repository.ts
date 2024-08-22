@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-objection';
 import { ModelClass } from 'objection';
-import { ICreateFinance, IFinance, IUpdateFinance } from './finance.interface';
+import {
+  ICategoryStatistics,
+  ICreateFinance,
+  IFinance,
+  IMonthlyStatistics,
+  ITotalStatistics,
+  IUpdateFinance,
+} from './finance.interface';
 import { Finance } from '../finances/finances.model';
+import { castTo } from '../../common/utils/type-utils';
+import { FindTotalStatisticsFeatureResult } from '../../features/finances/find-total-statistics/find-total-statistics.types';
 
 @Injectable()
 export class FinancesRepository {
@@ -52,31 +61,34 @@ export class FinancesRepository {
     await this.financeModel.query().deleteById(financeId);
   }
 
-  async findCategoryStatistics(userId: number): Promise<any> {
+  async findCategoryStatistics(userId: number): Promise<ICategoryStatistics[]> {
     return this.financeModel
       .query()
       .select('categoryId')
       .sum('amount as totalAmount')
       .where('userId', userId)
       .groupBy('categoryId')
-      .withGraphFetched('category');
+      .withGraphFetched('category')
+      .castTo<ICategoryStatistics[]>();
   }
 
-  async findTotalStatistics(userId: number): Promise<any> {
-    return this.financeModel
+  async findTotalStatistics(userId: number): Promise<ITotalStatistics[]> {
+    const result = await this.financeModel
       .query()
       .select('type')
       .sum('amount as totalAmount')
       .where('userId', userId)
       .groupBy('type');
+
+    return castTo<ITotalStatistics[]>(result);
   }
 
   async findMonthlyStatistics(
     userId: number,
     month: number,
     year: number,
-  ): Promise<any> {
-    return this.financeModel
+  ): Promise<IMonthlyStatistics[]> {
+    const result = await this.financeModel
       .query()
       .select('type')
       .sum('amount as totalAmount')
@@ -84,5 +96,7 @@ export class FinancesRepository {
       .andWhereRaw('EXTRACT(MONTH FROM date) = ?', [month])
       .andWhereRaw('EXTRACT(YEAR FROM date) = ?', [year])
       .groupBy('type');
+
+    return castTo<IMonthlyStatistics[]>(result);
   }
 }

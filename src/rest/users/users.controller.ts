@@ -26,7 +26,6 @@ import { UserCreateResponseDto } from './dto/user-create-response.dto';
 import { UsersListResponseDto } from './dto/users-list-response.dto';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import { CreateUserFeature } from '../../features/users/create-user/create-user.feature';
-import { UpdateUserFeature } from '../../features/users/update-user/update-user.feature';
 import { GetUsersFeature } from '../../features/users/get-users/get-users.feature';
 import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user-by-id.feature';
 import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
@@ -40,7 +39,7 @@ import { PaginationQueryDto } from './dto/pagination-query.dto';
 export class UserController {
   constructor(
     private readonly createUserFeature: CreateUserFeature,
-    private readonly updateUserFeature: UpdateUserFeature,
+    private readonly updateUserByIdFeature: UpdateUserByIdFeature,
     private readonly getUsersFeature: GetUsersFeature,
     private readonly getUserByIdFeature: GetUserByIdFeature,
     private readonly deleteUserByIdFeature: DeleteUserByIdFeature,
@@ -90,7 +89,7 @@ export class UserController {
     @Param('id') userId: number,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<void> {
-    await this.updateUserFeature.execute(userId, updateUserDto);
+    await this.updateUserByIdFeature.execute(userId, updateUserDto);
   }
 
   @Delete(':id')
