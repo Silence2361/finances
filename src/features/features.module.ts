@@ -11,10 +11,10 @@ import { DeleteCategoryByIdModule } from './categories/delete-category-by-id/del
 import { CreateFinanceModule } from './finances/create-finance/create-finance.module';
 import { UpdateFinanceByIdModule } from './finances/update-finance-by-id/update-finance-by-id.module';
 import { DeleteFinanceByIdModule } from './finances/delete-finance-by-id/delete-finance-by-id.module';
-import { FindFinancesModule } from './finances/find-finances/find-finances.module';
-import { FindCategoryStatisticsModule } from './finances/find-category-statistics/find-category-statistics.module';
-import { FindTotalStatisticsModule } from './finances/find-total-statistics/find-total-statistics.module';
-import { FindMonthlyStatisticsModule } from './finances/find-monthly-statistics/find-monthly-statistics.module';
+import { FindFinancesModule } from './finances/get-finances/get-finances.module';
+import { GetCategoryStatisticsModule } from './finances/get-category-statistics/get-category-statistics.module';
+import { GetTotalStatisticsModule } from './finances/get-total-statistics/get-total-statistics.module';
+import { GetMonthlyStatisticsModule } from './finances/get-monthly-statistics/get-monthly-statistics.module';
 import { UpdateUserByIdModule } from './users/update-user-by-id/update-user-by-id.module';
 import { RegisterUserModule } from './auth/register-user/register-user.module';
 import { LoginUserModule } from './auth/login-user/login-user.module';
@@ -35,9 +35,9 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
     UpdateFinanceByIdModule,
     DeleteFinanceByIdModule,
     FindFinancesModule,
-    FindCategoryStatisticsModule,
-    FindTotalStatisticsModule,
-    FindMonthlyStatisticsModule,
+    GetCategoryStatisticsModule,
+    GetTotalStatisticsModule,
+    GetMonthlyStatisticsModule,
     RegisterUserModule,
     LoginUserModule,
   ],
@@ -56,9 +56,9 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
     UpdateFinanceByIdModule,
     DeleteFinanceByIdModule,
     FindFinancesModule,
-    FindCategoryStatisticsModule,
-    FindTotalStatisticsModule,
-    FindMonthlyStatisticsModule,
+    GetCategoryStatisticsModule,
+    GetTotalStatisticsModule,
+    GetMonthlyStatisticsModule,
     RegisterUserModule,
     LoginUserModule,
   ],

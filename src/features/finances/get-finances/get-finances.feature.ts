@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import {
   GetFinancesFeatureParams,
   GetFinancesFeatureResult,
-} from './find-finances.types';
+} from './get-finances.types';
 import { FinancesRepository } from '../../../database/finances/finance.repository';
 import { IFinance } from '../../../database/finances/finance.interface';
 
 @Injectable()
-export class FindFinancesFeature {
+export class GetFinancesFeature {
   constructor(private readonly financesRepository: FinancesRepository) {}
 
   async execute(

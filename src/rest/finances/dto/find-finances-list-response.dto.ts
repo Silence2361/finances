@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GetFinancesFeatureResult } from '../../../features/finances/find-finances/find-finances.types';
+import { GetFinancesFeatureResult } from '../../../features/finances/get-finances/get-finances.types';
 
 export enum FinanceType {
   INCOME = 'income',

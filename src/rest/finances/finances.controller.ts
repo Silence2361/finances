@@ -27,11 +27,11 @@ import { UserId } from '../../common/decorators/user-id.decorator';
 import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
 import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
 import { DeleteFinanceByIdFeature } from '../../features/finances/delete-finance-by-id/delete-finance-by-id.feature';
-import { FindFinancesFeature } from '../../features/finances/find-finances/find-finances.feature';
-import { FindCategoryStatisticsFeature } from '../../features/finances/find-category-statistics/find-category-statistics.feature';
-import { FindTotalStatisticsFeature } from '../../features/finances/find-total-statistics/find-total-statistics.feature';
+import { GetFinancesFeature } from '../../features/finances/get-finances/get-finances.feature';
+import { GetCategoryStatisticsFeature } from '../../features/finances/get-category-statistics/get-category-statistics.feature';
+import { GetTotalStatisticsFeature } from '../../features/finances/get-total-statistics/get-total-statistics.feature';
 import { StatisticsResponseDto } from './dto/statistics-response.dto';
-import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
+import { GetMonthlyStatisticsFeature } from '../../features/finances/get-monthly-statistics/get-monthly-statistics.feature';
 import { FinancesPaginationQueryDto } from './dto/pagination-query.dto';
 import { GetFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 
@@ -44,11 +44,11 @@ export class FinancesController {
   constructor(
     private readonly createFinanceFeature: CreateFinanceFeature,
     private readonly updateFinanceByIdFeature: UpdateFinanceByIdFeature,
-    private readonly findFinancesFeature: FindFinancesFeature,
+    private readonly findFinancesFeature: GetFinancesFeature,
     private readonly deleteFinanceByIdFeature: DeleteFinanceByIdFeature,
-    private readonly findCategoryStatisticsFeature: FindCategoryStatisticsFeature,
-    private readonly findTotalStatisticsFeature: FindTotalStatisticsFeature,
-    private readonly findMonthlyStatisticsFeature: FindMonthlyStatisticsFeature,
+    private readonly GetCategoryStatisticsFeature: GetCategoryStatisticsFeature,
+    private readonly findTotalStatisticsFeature: GetTotalStatisticsFeature,
+    private readonly findMonthlyStatisticsFeature: GetMonthlyStatisticsFeature,
   ) {}
 
   @Post()
@@ -120,7 +120,7 @@ export class FinancesController {
   async findCategoryStatistics(
     @UserId() userId: number,
   ): Promise<StatisticsResponseDto[]> {
-    return this.findCategoryStatisticsFeature.execute({ userId });
+    return this.GetCategoryStatisticsFeature.execute({ userId });
   }
 
   @Get('statistics/total')

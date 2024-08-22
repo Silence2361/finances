@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import {
-  FindCategoryStatisticsFeatureParams,
-  FindCategoryStatisticsFeatureResult,
-} from './find-category-statistics.types';
+  GetCategoryStatisticsFeatureParams,
+  GetCategoryStatisticsFeatureResult,
+} from './get-category-statistics.types';
 import { FinancesRepository } from '../../../database/finances/finance.repository';
 import { ICategoryStatistics } from '../../../database/finances/finance.interface';
 
 @Injectable()
-export class FindCategoryStatisticsFeature {
+export class GetCategoryStatisticsFeature {
   constructor(private readonly financesRepository: FinancesRepository) {}
 
   async execute(
-    params: FindCategoryStatisticsFeatureParams,
-  ): Promise<FindCategoryStatisticsFeatureResult[]> {
+    params: GetCategoryStatisticsFeatureParams,
+  ): Promise<GetCategoryStatisticsFeatureResult[]> {
     const { userId } = params;
 
     const statistics: ICategoryStatistics[] =

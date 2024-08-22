@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import {
-  FindMonthlyStatisticsFeatureParams,
-  FindTotalStatisticsFeatureResult,
-} from './find-monthly-statistics.types';
+  GetMonthlyStatisticsFeatureParams,
+  GetTotalStatisticsFeatureResult,
+} from './get-monthly-statistics.types';
 import { FinancesRepository } from '../../../database/finances/finance.repository';
 
 @Injectable()
-export class FindMonthlyStatisticsFeature {
+export class GetMonthlyStatisticsFeature {
   constructor(private readonly financesRepository: FinancesRepository) {}
 
   async execute(
-    params: FindMonthlyStatisticsFeatureParams,
-  ): Promise<FindTotalStatisticsFeatureResult[]> {
+    params: GetMonthlyStatisticsFeatureParams,
+  ): Promise<GetTotalStatisticsFeatureResult[]> {
     const { userId, month, year } = params;
     const statisctics = await this.financesRepository.findMonthlyStatistics(
       userId,

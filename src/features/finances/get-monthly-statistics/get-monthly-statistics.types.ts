@@ -1,12 +1,12 @@
 import { FinanceType } from '../../../database/finances/finances.model';
 
-export interface FindMonthlyStatisticsFeatureParams {
+export interface GetMonthlyStatisticsFeatureParams {
   userId: number;
   month: number;
   year: number;
 }
 
-export interface FindTotalStatisticsFeatureResult {
+export interface GetTotalStatisticsFeatureResult {
   type: FinanceType;
   categoryId: number;
   totalAmount: number;
