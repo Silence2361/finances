@@ -1,17 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  DeleteCategoryByIdFeatureParams,
-  DeleteCategoryByIdFeatureResult,
-} from './delete-category-by-id.types';
+import { DeleteCategoryByIdFeatureParams } from './delete-category-by-id.types';
 import { CategoriesRepository } from '../../../database/categories/category.repository';
 
 @Injectable()
 export class DeleteCategoryByIdFeature {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
-  async execute(
-    params: DeleteCategoryByIdFeatureParams,
-  ): Promise<DeleteCategoryByIdFeatureResult> {
+  async execute(params: DeleteCategoryByIdFeatureParams): Promise<void> {
     const { id } = params;
 
     const category = await this.categoriesRepository.findCategoryById(id);
@@ -21,7 +16,5 @@ export class DeleteCategoryByIdFeature {
     }
 
     await this.categoriesRepository.deleteCategoryById(id);
-
-    return { success: true };
   }
 }
