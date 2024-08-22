@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { GetFinancesFeatureResult } from '../../../features/finances/find-finances/find-finances.types';
 
 export enum FinanceType {
   INCOME = 'income',
@@ -28,7 +29,7 @@ export class FinanceDetailsDto {
   type: FinanceType;
 }
 
-export class FindFinancesListResponseDto {
-  @ApiProperty()
-  finances: FinanceDetailsDto[];
+export class GetFinancesListResponseDto implements GetFinancesFeatureResult {
+  docs: FinanceDetailsDto[];
+  count: number;
 }

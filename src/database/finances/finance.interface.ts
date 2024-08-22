@@ -52,3 +52,7 @@ export interface IMonthlyStatistics {
   categoryId: number;
   totalAmount: number;
 }
+
+export interface IFinanceCount {
+  count: number;
+}

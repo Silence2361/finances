@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsInt, IsOptional } from 'class-validator';
 import { FinanceType } from '../../../database/finances/finances.model';
 
 export class FindFinancesQueryDto {
@@ -7,4 +7,10 @@ export class FindFinancesQueryDto {
   @IsOptional()
   @IsEnum(FinanceType)
   type?: FinanceType;
+
+  @IsInt()
+  page: number;
+
+  @IsInt()
+  pageSize: number;
 }

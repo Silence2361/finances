@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -22,13 +23,14 @@ import {
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
-import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 import { CreateCategoryResponseDto } from './dto/create-category-response.dto';
 import { CreateCategoryFeature } from '../../features/categories/create-category/create-category.feature';
 import { UpdateCategoryByIdFeature } from '../../features/categories/update-category-by-id/update-category-by-id.feature';
 import { GetCategoriesFeature } from '../../features/categories/get-categories/get-categories.feature';
 import { GetCategoryByIdFeature } from '../../features/categories/get-category-by-id/get-category-by-id.feature';
 import { DeleteCategoryByIdFeature } from '../../features/categories/delete-category-by-id/delete-category-by-id.features';
+import { CategoryPaginationQueryDto } from './dto/pagination-query.dto';
+import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -60,8 +62,10 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Get all categories' })
   @ApiOkResponse({ type: [CategoriesListResponseDto] })
   @ApiResponse({ status: 200, description: 'Categories returned successfully' })
-  async findAllCategories(): Promise<CategoriesListResponseDto[]> {
-    return this.getCategoriesFeature.execute({});
+  async findAllCategories(
+    @Query() paginationQuery: CategoryPaginationQueryDto,
+  ): Promise<CategoriesListResponseDto> {
+    return this.getCategoriesFeature.execute(paginationQuery);
   }
 
   @Get(':id')

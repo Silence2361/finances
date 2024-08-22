@@ -5,13 +5,12 @@ import {
   GetUsersFeatureResult,
 } from './get-users.types';
 import { IUser } from '../../../database/users/user.interface';
-import { PaginationQueryDto } from '../../../rest/users/dto/pagination-query.dto';
 
 @Injectable()
 export class GetUsersFeature {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async execute(params: PaginationQueryDto): Promise<any> {
+  async execute(params: GetUsersFeatureParams): Promise<GetUsersFeatureResult> {
     const { page = 1, pageSize = 10 } = params;
 
     const offset = (page - 1) * pageSize;

@@ -11,3 +11,7 @@ export interface IUpdateCategory {
   id?: number;
   name?: string;
 }
+
+export interface ICategoryCount {
+  count: number;
+}

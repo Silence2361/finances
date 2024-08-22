@@ -2,7 +2,7 @@ import { IsInt, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
-export class UsersPaginationQueryDto {
+export class FinancesPaginationQueryDto {
   @ApiProperty({ example: 1, description: 'The number of the page to return' })
   @IsInt()
   @Min(1)

@@ -5,13 +5,13 @@ import {
   ICategoryStatistics,
   ICreateFinance,
   IFinance,
+  IFinanceCount,
   IMonthlyStatistics,
   ITotalStatistics,
   IUpdateFinance,
 } from './finance.interface';
-import { Finance } from '../finances/finances.model';
+import { Finance, FinanceType } from '../finances/finances.model';
 import { castTo } from '../../common/utils/type-utils';
-import { FindTotalStatisticsFeatureResult } from '../../features/finances/find-total-statistics/find-total-statistics.types';
 
 @Injectable()
 export class FinancesRepository {
@@ -26,11 +26,17 @@ export class FinancesRepository {
     return newFinance;
   }
 
-  async findFinances(userId: number, type?: string): Promise<IFinance[]> {
+  async findFinances(
+    userId: number,
+    paginationOptions: { offset: number; limit: number },
+    type?: FinanceType,
+  ): Promise<IFinance[]> {
     const query = this.financeModel
       .query()
       .where({ userId: userId })
-      .withGraphFetched('category');
+      .withGraphFetched('category')
+      .offset(paginationOptions.offset)
+      .limit(paginationOptions.limit);
 
     if (type) {
       query.where({ type });
@@ -39,18 +45,21 @@ export class FinancesRepository {
     return query;
   }
 
+  async financesCount(): Promise<number> {
+    const result = await this.financeModel
+      .query()
+      .count('id as count')
+      .castTo<IFinanceCount[]>();
+
+    return result[0].count;
+  }
+
   async findFinanceById(financeId: number): Promise<IFinance | null> {
     const finance: IFinance | null = await this.financeModel
       .query()
       .findById(financeId)
       .withGraphFetched('category');
     return finance;
-  }
-
-  async categoriesCount(): Promise<number> {
-    const result: any = await this.financeModel.query().count('id as count');
-    return result[0].count;
-    // [{count : number}]
   }
 
   async updateFinanceById(

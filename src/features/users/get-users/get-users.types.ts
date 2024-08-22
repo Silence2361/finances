@@ -1,9 +1,11 @@
-import { UserRole } from '../../../database/users/users.model';
+import { IUser } from '../../../database/users/user.interface';
 
-export interface GetUsersFeatureParams {}
+export interface GetUsersFeatureParams {
+  page: number;
+  pageSize: number;
+}
 
 export interface GetUsersFeatureResult {
-  id: number;
-  email: string;
-  role: UserRole;
+  docs: Omit<IUser, 'password'>[];
+  count: number;
 }

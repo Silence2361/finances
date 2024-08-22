@@ -4,6 +4,7 @@ import { ModelClass } from 'objection';
 import { Category } from '../categories/categories.model';
 import {
   ICategory,
+  ICategoryCount,
   ICreateCategory,
   IUpdateCategory,
 } from './category.interface';
@@ -18,8 +19,14 @@ export class CategoriesRepository {
     return this.categoryModel.query().insert(createCategory);
   }
 
-  async findAllCategories(): Promise<ICategory[]> {
-    return this.categoryModel.query();
+  async findAllCategories(paginationOptions: {
+    offset: number;
+    limit: number;
+  }): Promise<ICategory[]> {
+    return await this.categoryModel
+      .query()
+      .offset(paginationOptions.offset)
+      .limit(paginationOptions.limit);
   }
 
   async findCategoryById(categoryId: number): Promise<ICategory | null> {
@@ -27,9 +34,12 @@ export class CategoriesRepository {
   }
 
   async categoriesCount(): Promise<number> {
-    const result: any = await this.categoryModel.query().count('id as count');
+    const result = await this.categoryModel
+      .query()
+      .count('id as count')
+      .castTo<ICategoryCount[]>();
+
     return result[0].count;
-    // [{count : number}]
   }
 
   async findCategoryByName(name: string): Promise<ICategory | null> {

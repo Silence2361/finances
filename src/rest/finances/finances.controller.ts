@@ -23,8 +23,6 @@ import {
 } from '@nestjs/swagger';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { CreateFinanceResponseDto } from './dto/create-finance-response.dto';
-import { FindFinancesQueryDto } from './dto/find-finances-query.dto';
-
 import { UserId } from '../../common/decorators/user-id.decorator';
 import { CreateFinanceFeature } from '../../features/finances/create-finance/create-finance.feature';
 import { UpdateFinanceByIdFeature } from '../../features/finances/update-finance-by-id/update-finance-by-id.feature';
@@ -33,8 +31,9 @@ import { FindFinancesFeature } from '../../features/finances/find-finances/find-
 import { FindCategoryStatisticsFeature } from '../../features/finances/find-category-statistics/find-category-statistics.feature';
 import { FindTotalStatisticsFeature } from '../../features/finances/find-total-statistics/find-total-statistics.feature';
 import { StatisticsResponseDto } from './dto/statistics-response.dto';
-import { FindFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 import { FindMonthlyStatisticsFeature } from '../../features/finances/find-monthly-statistics/find-monthly-statistics.feature';
+import { FinancesPaginationQueryDto } from './dto/pagination-query.dto';
+import { GetFinancesListResponseDto } from './dto/find-finances-list-response.dto';
 
 @ApiTags('finances')
 @Controller('finances')
@@ -70,16 +69,16 @@ export class FinancesController {
 
   @Get()
   @ApiOperation({ summary: 'Get finance all finances records or get by type' })
-  @ApiOkResponse({ type: FindFinancesListResponseDto })
+  @ApiOkResponse({ type: GetFinancesListResponseDto })
   @ApiResponse({
     status: 200,
     description: 'Finance records returned successfully',
   })
   async findFinances(
-    @Query() query: FindFinancesQueryDto,
+    @Query() query: FinancesPaginationQueryDto,
     @UserId() userId: number,
-  ): Promise<FindFinancesListResponseDto> {
-    return this.findFinancesFeature.execute({ userId, type: query?.type });
+  ): Promise<GetFinancesListResponseDto> {
+    return this.findFinancesFeature.execute(userId, query);
   }
 
   @Put(':id')

@@ -1,6 +1,11 @@
-export interface GetCategoriesFeatureParams {}
+import { ICategory } from '../../../database/categories/category.interface';
+
+export interface GetCategoriesFeatureParams {
+  page: number;
+  pageSize: number;
+}
 
 export interface GetCategoriesFeatureResult {
-  id: number;
-  name: string;
+  docs: ICategory[];
+  count: number;
 }
