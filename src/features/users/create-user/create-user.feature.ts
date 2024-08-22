@@ -18,6 +18,7 @@ export class CreateUserFeature {
     const { email, role, password } = params;
 
     const existingUser = await this.usersRepository.findUserByEmail(email);
+
     if (existingUser) {
       throw new ConflictException('Email already registered');
     }
@@ -29,6 +30,7 @@ export class CreateUserFeature {
       password: hashedPassword,
       role,
     });
+
     return { id: user.id };
   }
 }

@@ -15,11 +15,13 @@ export class UpdateUserByIdFeature {
     const { email, role, password } = params;
 
     const user: IUser | null = await this.usersRepository.findUserById(userId);
+
     if (!user) {
       throw new NotFoundException(`User with id ${userId} not found`);
     }
 
     let hashedPassword: string | undefined;
+
     if (password) {
       hashedPassword = await bcrypt.hash(password, 10);
     }

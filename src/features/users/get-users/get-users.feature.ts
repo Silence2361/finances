@@ -21,6 +21,7 @@ export class GetUsersFeature {
     });
 
     const count = await this.userRepository.usersCount();
+
     return {
       docs: users.map(({ id, email, role }) => ({
         id,

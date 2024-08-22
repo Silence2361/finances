@@ -10,6 +10,7 @@ export class DeleteUserByIdFeature {
     const { id } = params;
 
     const user = await this.usersRepository.findUserById(id);
+
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
