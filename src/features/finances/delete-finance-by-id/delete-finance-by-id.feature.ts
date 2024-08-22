@@ -12,10 +12,13 @@ export class DeleteFinanceByIdFeature {
 
   async execute(params: DeleteFinanceByIdFeatureParams): Promise<void> {
     const { userId, financeId } = params;
+
     const finance = await this.financesRepository.findFinanceById(financeId);
+
     if (!finance) {
       throw new NotFoundException('Finance record not found');
     }
+
     if (finance.userId !== userId) {
       throw new ForbiddenException();
     }

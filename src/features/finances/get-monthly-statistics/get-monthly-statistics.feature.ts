@@ -13,6 +13,7 @@ export class GetMonthlyStatisticsFeature {
     params: GetMonthlyStatisticsFeatureParams,
   ): Promise<GetTotalStatisticsFeatureResult[]> {
     const { userId, month, year } = params;
+
     const statisctics = await this.financesRepository.findMonthlyStatistics(
       userId,
       month,

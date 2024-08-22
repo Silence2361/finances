@@ -30,6 +30,7 @@ export class GetFinancesFeature {
     );
 
     const count = await this.financesRepository.financesCount();
+
     return {
       docs: finances.map(({ id, type, amount, categoryId, userId, date }) => ({
         id,
