@@ -34,6 +34,7 @@ import { DeleteCategoryByIdFeature } from '../../features/categories/delete-cate
 @Controller('categories')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@ApiResponse({ status: 401, description: 'Unauthorized' })
 export class CategoriesController {
   constructor(
     private readonly createCategoryFeature: CreateCategoryFeature,
