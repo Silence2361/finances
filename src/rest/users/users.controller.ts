@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -29,6 +30,7 @@ import { UpdateUserFeature } from '../../features/users/update-user/update-user.
 import { GetUsersFeature } from '../../features/users/get-users/get-users.feature';
 import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user-by-id.feature';
 import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -60,8 +62,11 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [UsersListResponseDto] })
   @ApiResponse({ status: 200, description: 'Users returned successfully' })
-  async findAll(): Promise<UsersListResponseDto[]> {
-    return this.getUsersFeature.execute({});
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<UsersListResponseDto[]> {
+    console.log('Received pagination parameters:', paginationQuery);
+    return this.getUsersFeature.execute(paginationQuery);
   }
 
   @Get(':id')

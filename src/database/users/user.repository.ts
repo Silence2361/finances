@@ -14,8 +14,14 @@ export class UsersRepository {
     return this.userModel.query().insert(createUser);
   }
 
-  async findAllUsers(): Promise<IUser[]> {
-    return this.userModel.query();
+  async findAllUsers(paginationOptions: {
+    offset: number;
+    limit: number;
+  }): Promise<IUser[]> {
+    return await this.userModel
+      .query()
+      .offset(paginationOptions.offset)
+      .limit(paginationOptions.limit);
   }
 
   async findUserById(userId: number): Promise<IUser | null> {
