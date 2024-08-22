@@ -24,6 +24,7 @@ export class GetCategoriesFeature {
       });
 
     const count = await this.categoriesRepository.categoriesCount();
+
     return {
       docs: categories.map(({ id, name }) => ({
         id,

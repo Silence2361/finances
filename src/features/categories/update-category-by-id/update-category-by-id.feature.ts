@@ -15,6 +15,7 @@ export class UpdateCategoryByIdFeature {
 
     const categoryExists =
       await this.categoriesRepository.findCategoryById(categoryId);
+
     if (!categoryExists) {
       throw new NotFoundException(`Category with id ${categoryId} not found`);
     }

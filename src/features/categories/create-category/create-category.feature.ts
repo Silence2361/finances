@@ -14,8 +14,10 @@ export class CreateCategoryFeature {
     params: CreateCategoryFeatureParams,
   ): Promise<CreateCategoryFeatureResult> {
     const { name } = params;
+
     const existingCategory =
       await this.categoriesRepository.findCategoryByName(name);
+
     if (existingCategory) {
       throw new ConflictException('Category already exists');
     }
@@ -24,6 +26,7 @@ export class CreateCategoryFeature {
       await this.categoriesRepository.createCategory({
         name,
       });
+
     return { id: createCategory.id };
   }
 }

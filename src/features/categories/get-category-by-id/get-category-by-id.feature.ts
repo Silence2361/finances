@@ -21,6 +21,7 @@ export class GetCategoryByIdFeature {
     if (!category) {
       throw new NotFoundException(`Category with id ${id} not found`);
     }
+
     return category;
   }
 }
