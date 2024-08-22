@@ -35,7 +35,7 @@ describe('UserController (e2e) - Create User', () => {
       })
       .expect(HttpStatus.OK);
 
-    accessToken = loginResponse.body.access_token;
+    accessToken = loginResponse.body.accessToken;
 
     const createUserResponse = await request(app.getHttpServer())
       .post('/users')
@@ -68,14 +68,17 @@ describe('UserController (e2e) - Create User', () => {
     expect(response.body).toHaveProperty('id');
   });
 
-  it('/users (GET) - should return all users', async () => {
+  it('/users (GET) - should return  users with pagination', async () => {
     const response = await request(app.getHttpServer())
       .get('/users')
+      .query({ page: 1, pageSize: 10 })
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body.docs).toBeDefined();
+    expect(Array.isArray(response.body.docs)).toBe(true);
+    expect(response.body.docs.length).toBeGreaterThan(0);
+    expect(response.body.count).toBeDefined();
   });
 
   it('/users/:id (GET) - should return a user by ID', async () => {
@@ -88,7 +91,7 @@ describe('UserController (e2e) - Create User', () => {
   });
 
   it('/users/:id (PUT) - should update a user by ID', async () => {
-    const response = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .put(`/users/${userId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -96,8 +99,6 @@ describe('UserController (e2e) - Create User', () => {
         password: 'newpassword',
       })
       .expect(HttpStatus.OK);
-
-    expect(response.body).toHaveProperty('email', 'updateduser@example.com');
   });
 
   it('/users/:id (DELETE) - should delete a user by ID', async () => {

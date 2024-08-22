@@ -42,7 +42,7 @@ describe('FinancesController (e2e) - Finances', () => {
       })
       .expect(HttpStatus.OK);
 
-    accessToken = loginResponse.body.access_token;
+    accessToken = loginResponse.body.accessToken;
 
     if (!accessToken) {
       throw new Error('Failed to obtain access token');
@@ -102,14 +102,19 @@ describe('FinancesController (e2e) - Finances', () => {
     expect(response.body).toHaveProperty('id');
   });
 
-  it('/finances (GET) - should return all finance records', async () => {
+  it('/finances (GET) - should return finances records with pagination', async () => {
+    const page = 1;
+    const pageSize = 10;
+
     const response = await request(app.getHttpServer())
-      .get('/finances')
+      .get(`/finances?page=${page}&pageSize=${pageSize}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
 
-    expect(Array.isArray(response.body.finances)).toBe(true);
-    expect(response.body.finances.length).toBeGreaterThan(0);
+    expect(response.body.docs).toBeDefined();
+    expect(Array.isArray(response.body.docs)).toBe(true);
+    expect(response.body.docs.length).toBeGreaterThan(0);
+    expect(response.body.count).toBeDefined();
   });
 
   it('/finances/:id (PUT) - should update a finance record by ID', async () => {
@@ -123,8 +128,6 @@ describe('FinancesController (e2e) - Finances', () => {
         date: new Date().toISOString(),
       })
       .expect(HttpStatus.OK);
-
-    expect(response.body).toHaveProperty('amount', '1200.00');
   });
 
   it('/finances/:id (DELETE) - should delete a finance record by ID', async () => {

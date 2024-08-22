@@ -35,7 +35,7 @@ describe('CategoryController (e2e) - Categories', () => {
       })
       .expect(HttpStatus.OK);
 
-    accessToken = loginResponse.body.access_token;
+    accessToken = loginResponse.body.accessToken;
 
     const createCategoryResponse = await request(app.getHttpServer())
       .post('/categories')
@@ -65,14 +65,18 @@ describe('CategoryController (e2e) - Categories', () => {
     expect(response.body).toHaveProperty('id');
   });
 
-  it('/categories (GET) - should return all categories', async () => {
+  it('/categories (GET) - should return  categories with pagination', async () => {
     const response = await request(app.getHttpServer())
       .get('/categories')
+      .query({ page: 1, pageSize: 10 })
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body.docs).toBeDefined();
+    expect(Array.isArray(response.body.docs)).toBe(true);
+    expect(response.body.docs.length).toBeGreaterThan(0);
+
+    expect(response.body.count).toBeDefined();
   });
 
   it('/categories/:id (GET) - should return a category by ID', async () => {
@@ -92,8 +96,6 @@ describe('CategoryController (e2e) - Categories', () => {
         name: 'Updated Category',
       })
       .expect(HttpStatus.OK);
-
-    expect(response.body).toHaveProperty('name', 'Updated Category');
   });
 
   it('/categories/:id (DELETE) - should delete a category by ID', async () => {

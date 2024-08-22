@@ -48,7 +48,7 @@ describe('AuthController (e2e)', () => {
       })
       .expect(HttpStatus.OK);
 
-    expect(response.body).toHaveProperty('access_token');
+    expect(response.body).toHaveProperty('accessToken');
   });
 
   it('/auth/login (POST) - fail with wrong password', async () => {
