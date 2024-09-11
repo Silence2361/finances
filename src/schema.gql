@@ -1,0 +1,53 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserByIdResponseDto {
+  id: Int!
+  email: String!
+  role: String!
+}
+
+type UserCreateResponseDto {
+  id: Int!
+}
+
+type UserDto {
+  id: Int!
+  email: String!
+  role: String!
+}
+
+type UsersListResponseDto {
+  docs: [UserDto!]!
+  count: Int!
+}
+
+type Query {
+  findAll(
+    """The number of the page to return"""
+    page: Int
+
+    """The number of items per page"""
+    pageSize: Int
+  ): UsersListResponseDto!
+  findUserById(id: Int!): UserByIdResponseDto
+}
+
+type Mutation {
+  createUser(createUserDto: CreateUserDto!): UserCreateResponseDto!
+  updateUserById(id: Int!, updateUserDto: UpdateUserDto!): Boolean!
+  deleteUserById(id: Int!): Boolean!
+}
+
+input CreateUserDto {
+  email: String!
+  password: String!
+  role: String!
+}
+
+input UpdateUserDto {
+  email: String
+  password: String
+  role: String
+}

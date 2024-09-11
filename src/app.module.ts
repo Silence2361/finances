@@ -8,6 +8,10 @@ import { FinancesModule } from './rest/finances/finances.module';
 import { DatabaseModule } from './database/database.module';
 import { JwtModule } from './third-party/jwt/jwt.module';
 import { FeaturesModule } from './features/features.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { Request } from 'express';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -32,6 +36,12 @@ import { FeaturesModule } from './features/features.module';
         };
       },
       inject: [ConfigService],
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      path: '/graphql',
+      context: ({ req }: { req: Request }) => ({ headers: req.headers }),
     }),
     DatabaseModule,
     AuthModule,

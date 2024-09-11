@@ -1,24 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserByIdResponseDto } from './dto/user-by-id-response.dto';
@@ -31,13 +11,11 @@ import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user
 import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
 import { UpdateUserByIdFeature } from '../../features/users/update-user-by-id/update-user-by-id.feature';
 import { UsersPaginationQueryDto } from './dto/pagination-query.dto';
+import { Args, Query, Mutation, Resolver, Int } from '@nestjs/graphql';
 
-@ApiTags('users')
-@Controller('users')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
-@ApiResponse({ status: 401, description: 'Unauthorized' })
-export class UserController {
+@Resolver(() => UserByIdResponseDto)
+//@UseGuards(JwtAuthGuard)
+export class UserResolver {
   constructor(
     private readonly createUserFeature: CreateUserFeature,
     private readonly updateUserByIdFeature: UpdateUserByIdFeature,
@@ -46,58 +24,41 @@ export class UserController {
     private readonly deleteUserByIdFeature: DeleteUserByIdFeature,
   ) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiCreatedResponse({ type: UserCreateResponseDto })
-  @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @HttpCode(HttpStatus.CREATED)
+  @Mutation(() => UserCreateResponseDto)
   async createUser(
-    @Body() createUserDto: CreateUserDto,
+    @Args('createUserDto') createUserDto: CreateUserDto,
   ): Promise<UserCreateResponseDto> {
     return this.createUserFeature.execute(createUserDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiOkResponse({ type: [UsersListResponseDto] })
-  @ApiResponse({ status: 200, description: 'Users returned successfully' })
+  @Query(() => UsersListResponseDto)
   async findAll(
-    @Query() paginationQuery: UsersPaginationQueryDto,
+    @Args() paginationQuery: UsersPaginationQueryDto,
   ): Promise<UsersListResponseDto> {
     return this.getUsersFeature.execute(paginationQuery);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user profile' })
-  @ApiOkResponse({ type: UserByIdResponseDto })
-  @ApiResponse({
-    status: 200,
-    description: 'Successfully returned user profile.',
-  })
+  @Query(() => UserByIdResponseDto, { nullable: true })
   async findUserById(
-    @Param('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<UserByIdResponseDto | null> {
     return this.getUserByIdFeature.execute({ id });
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update user by ID' })
-  @ApiResponse({ status: 200, description: 'User updated successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @Mutation(() => Boolean)
   async updateUserById(
-    @Param('id') userId: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<void> {
+    @Args('id', { type: () => Int }) userId: number,
+    @Args('updateUserDto') updateUserDto: UpdateUserDto,
+  ): Promise<boolean> {
     await this.updateUserByIdFeature.execute(userId, updateUserDto);
+    return true;
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete user by ID' })
-  @ApiResponse({ status: 204, description: 'User deleted successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteUserById(@Param('id') id: number): Promise<void> {
+  @Mutation(() => Boolean)
+  async deleteUserById(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<boolean> {
     await this.deleteUserByIdFeature.execute({ id });
+    return true;
   }
 }

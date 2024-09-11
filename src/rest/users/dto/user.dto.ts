@@ -1,8 +1,8 @@
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { UserRole } from '../../../database/users/users.model';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class UserByIdResponseDto {
+export class UserDto {
   @Field(() => Int)
   id: number;
 

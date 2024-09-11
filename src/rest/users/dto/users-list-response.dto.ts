@@ -1,7 +1,11 @@
-import { GetUsersFeatureResult } from '../../../features/users/get-users/get-users.types';
-import { IUser } from '../../../database/users/user.interface';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { UserDto } from './user.dto';
 
-export class UsersListResponseDto implements GetUsersFeatureResult {
-  docs: Omit<IUser, 'password'>[];
+@ObjectType()
+export class UsersListResponseDto {
+  @Field(() => [UserDto])
+  docs: UserDto[];
+
+  @Field(() => Int)
   count: number;
 }
