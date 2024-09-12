@@ -1,7 +1,11 @@
-import { ICategory } from '../../../database/categories/category.interface';
-import { GetCategoriesFeatureResult } from '../../../features/categories/get-categories/get-categories.types';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { CategoryDto } from './category.dto';
 
-export class CategoriesListResponseDto implements GetCategoriesFeatureResult {
-  docs: ICategory[];
+@ObjectType()
+export class CategoriesListResponseDto {
+  @Field(() => [CategoryDto])
+  docs: CategoryDto[];
+
+  @Field(() => Int)
   count: number;
 }

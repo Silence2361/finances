@@ -1,25 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryByIdResponseDto } from './dto/category-by-id-response.dto';
@@ -31,13 +10,11 @@ import { GetCategoryByIdFeature } from '../../features/categories/get-category-b
 import { DeleteCategoryByIdFeature } from '../../features/categories/delete-category-by-id/delete-category-by-id.features';
 import { CategoryPaginationQueryDto } from './dto/pagination-query.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-@ApiTags('categories')
-@Controller('categories')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
-@ApiResponse({ status: 401, description: 'Unauthorized' })
-export class CategoriesController {
+@Resolver(() => CategoryByIdResponseDto)
+//@UseGuards(JwtAuthGuard)
+export class CategoryResolver {
   constructor(
     private readonly createCategoryFeature: CreateCategoryFeature,
     private readonly updateCategoryByIdFeature: UpdateCategoryByIdFeature,
@@ -46,54 +23,41 @@ export class CategoriesController {
     private readonly deleteCategoryByIdFeature: DeleteCategoryByIdFeature,
   ) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new category' })
-  @ApiCreatedResponse({ type: CreateCategoryResponseDto })
-  @ApiResponse({ status: 201, description: 'Category created successfully' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @HttpCode(HttpStatus.CREATED)
+  @Mutation(() => CreateCategoryResponseDto)
   async createCategory(
-    @Body() createCategoryDto: CreateCategoryDto,
+    @Args('createCategoryDto') createCategoryDto: CreateCategoryDto,
   ): Promise<CreateCategoryResponseDto> {
     return this.createCategoryFeature.execute(createCategoryDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all categories' })
-  @ApiOkResponse({ type: [CategoriesListResponseDto] })
-  @ApiResponse({ status: 200, description: 'Categories returned successfully' })
+  @Query(() => CategoriesListResponseDto)
   async findAllCategories(
-    @Query() paginationQuery: CategoryPaginationQueryDto,
+    @Args() paginationQuery: CategoryPaginationQueryDto,
   ): Promise<CategoriesListResponseDto> {
     return this.getCategoriesFeature.execute(paginationQuery);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get category by id' })
-  @ApiOkResponse({ type: CategoryByIdResponseDto })
-  @ApiResponse({ status: 200, description: 'Category returned successfully' })
+  @Query(() => CategoryByIdResponseDto, { nullable: true })
   async findCategoryById(
-    @Param('id') id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<CategoryByIdResponseDto | null> {
     return this.getCategoryByIdFeature.execute({ id });
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a category' })
-  @ApiOkResponse()
-  @ApiResponse({ status: 200, description: 'Category updated successfully' })
+  @Mutation(() => Boolean)
   async updateCategoryById(
-    @Param('id') categoryId: number,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<void> {
+    @Args('id', { type: () => Int }) categoryId: number,
+    @Args('updateCategoryDto') updateCategoryDto: UpdateCategoryDto,
+  ): Promise<boolean> {
     await this.updateCategoryByIdFeature.execute(categoryId, updateCategoryDto);
+    return true;
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete category' })
-  @ApiResponse({ status: 204, description: 'Category deleted successfully' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteCategory(@Param('id') id: number): Promise<void> {
+  @Mutation(() => Boolean)
+  async deleteCategory(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<boolean> {
     await this.deleteCategoryByIdFeature.execute({ id });
+    return true;
   }
 }

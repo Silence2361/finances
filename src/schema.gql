@@ -23,6 +23,25 @@ type UsersListResponseDto {
   count: Int!
 }
 
+type CategoryByIdResponseDto {
+  id: Int!
+  name: String!
+}
+
+type CreateCategoryResponseDto {
+  id: Int!
+}
+
+type CategoryDto {
+  id: Int!
+  name: String!
+}
+
+type CategoriesListResponseDto {
+  docs: [CategoryDto!]!
+  count: Int!
+}
+
 type Query {
   findAll(
     """The number of the page to return"""
@@ -32,12 +51,23 @@ type Query {
     pageSize: Int
   ): UsersListResponseDto!
   findUserById(id: Int!): UserByIdResponseDto
+  findAllCategories(
+    """The number of the page to return"""
+    page: Int
+
+    """The number of items per page"""
+    pageSize: Int
+  ): CategoriesListResponseDto!
+  findCategoryById(id: Int!): CategoryByIdResponseDto
 }
 
 type Mutation {
   createUser(createUserDto: CreateUserDto!): UserCreateResponseDto!
   updateUserById(id: Int!, updateUserDto: UpdateUserDto!): Boolean!
   deleteUserById(id: Int!): Boolean!
+  createCategory(createCategoryDto: CreateCategoryDto!): CreateCategoryResponseDto!
+  updateCategoryById(id: Int!, updateCategoryDto: UpdateCategoryDto!): Boolean!
+  deleteCategory(id: Int!): Boolean!
 }
 
 input CreateUserDto {
@@ -50,4 +80,12 @@ input UpdateUserDto {
   email: String
   password: String
   role: String
+}
+
+input CreateCategoryDto {
+  name: String!
+}
+
+input UpdateCategoryDto {
+  name: String
 }
