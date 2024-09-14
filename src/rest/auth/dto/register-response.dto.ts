@@ -1,12 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class RegisterResponseDto {
-  @ApiProperty({ example: 1, description: 'User ID' })
+  @Field(() => Int)
   id: number;
 
-  @ApiProperty({ example: 'user@example.com', description: 'User email' })
+  @Field(() => String)
   email: string;
 
-  @ApiProperty({ example: 'user', description: 'User role' })
+  @Field(() => String)
   role: string;
 }

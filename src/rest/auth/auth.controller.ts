@@ -10,35 +10,25 @@ import { LoginResponseDto } from './dto/login-response.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { RegisterUserFeature } from '../../features/auth/register-user/register-user.feature';
 import { LoginUserFeature } from '../../features/auth/login-user/login-user.feature';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { LoginDto } from './dto/login.dto';
 
-@ApiTags('auth')
-@Controller('auth')
-@ApiResponse({ status: 401, description: 'Unauthorized.' })
-export class AuthController {
+@Resolver()
+export class AuthResolver {
   constructor(
     private readonly registerUserFeature: RegisterUserFeature,
     private readonly loginUserFeature: LoginUserFeature,
   ) {}
 
-  @Post('register')
-  @ApiOperation({ summary: 'Registration of new user' })
-  @ApiOkResponse({ type: RegisterResponseDto })
-  @ApiResponse({
-    status: 201,
-    description: 'The user has been successfully created.',
-  })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
-  @HttpCode(HttpStatus.CREATED)
-  async register(@Body() dto: AuthDto): Promise<RegisterResponseDto> {
-    return this.registerUserFeature.execute(dto);
+  @Mutation(() => RegisterResponseDto)
+  async register(
+    @Args('authData') authData: AuthDto,
+  ): Promise<RegisterResponseDto> {
+    return this.registerUserFeature.execute(authData);
   }
 
-  @Post('login')
-  @ApiOperation({ summary: 'Login a user' })
-  @ApiOkResponse({ type: LoginResponseDto })
-  @ApiResponse({ status: 200, description: 'Successfully logged in.' })
-  @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: AuthDto): Promise<LoginResponseDto> {
-    return this.loginUserFeature.execute(dto);
+  @Mutation(() => LoginResponseDto)
+  async login(@Args('authData') authData: LoginDto): Promise<LoginResponseDto> {
+    return this.loginUserFeature.execute(authData);
   }
 }

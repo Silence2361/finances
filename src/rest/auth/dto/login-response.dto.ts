@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class LoginResponseDto {
-  @ApiProperty({ example: 'jwt_token', description: 'JWT Access Token' })
+  @Field(() => String)
   accessToken: string;
 }
