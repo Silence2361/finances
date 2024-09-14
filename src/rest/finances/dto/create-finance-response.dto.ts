@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class CreateFinanceResponseDto {
-  @ApiProperty()
+  @Field(() => Int)
   id: number;
 }

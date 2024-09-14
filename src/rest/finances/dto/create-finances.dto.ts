@@ -5,48 +5,35 @@ import {
   IsEnum,
   IsOptional,
   Min,
+  IsInt,
 } from 'class-validator';
-import { FinanceType } from '../../../database/finances/finances.model';
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { FinanceType } from '../enums/finances.enum';
 
+@InputType()
 export class CreateFinanceDto {
-  @ApiProperty({
-    example: 100.5,
-    description: 'The amount of the finance record',
-  })
+  @Field(() => Int)
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
   @Min(0, { message: 'Amount cannot be negative' })
   amount: number;
 
-  @ApiProperty({
-    example: '2024-07-30T10:00:00.000Z',
-    description: 'The date of the finance record',
-  })
+  @Field(() => String)
   @IsNotEmpty()
   @IsString()
   date: string;
 
-  @ApiProperty({
-    example: 'Grocery shopping',
-    description: 'The description of the finance record',
-  })
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   description?: string;
 
-  @ApiProperty({
-    example: 1,
-    description: 'The category ID of the finance record',
-  })
+  @Field(() => Int)
   @IsNotEmpty()
   @IsNumber()
   categoryId: number;
 
-  @ApiProperty({
-    example: FinanceType.EXPENSE,
-    description: 'The type of the finance record',
-  })
+  @Field(() => FinanceType)
   @IsNotEmpty()
   @IsEnum(FinanceType)
   type: FinanceType;

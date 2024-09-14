@@ -1,35 +1,35 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { GetFinancesFeatureResult } from '../../../features/finances/get-finances/get-finances.types';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { FinanceType } from '../enums/finances.enum';
 
-export enum FinanceType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-}
-
+@ObjectType()
 export class FinanceDetailsDto {
-  @ApiProperty()
+  @Field(() => Int)
   id: number;
 
-  @ApiProperty()
+  @Field(() => Int)
   amount: number;
 
-  @ApiProperty()
+  @Field(() => String)
   date: string;
 
-  @ApiProperty({ required: false })
+  @Field({ nullable: true })
   description?: string;
 
-  @ApiProperty()
+  @Field(() => Int)
   categoryId: number;
 
-  @ApiProperty()
+  @Field(() => Int)
   userId: number;
 
-  @ApiProperty()
+  @Field(() => FinanceType)
   type: FinanceType;
 }
 
-export class GetFinancesListResponseDto implements GetFinancesFeatureResult {
+@ObjectType()
+export class GetFinancesListResponseDto {
+  @Field(() => [FinanceDetailsDto])
   docs: FinanceDetailsDto[];
+
+  @Field(() => Int)
   count: number;
 }

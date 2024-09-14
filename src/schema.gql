@@ -42,6 +42,37 @@ type CategoriesListResponseDto {
   count: Int!
 }
 
+type CreateFinanceResponseDto {
+  id: Int!
+}
+
+type StatisticsResponseDto {
+  type: FinanceType!
+  categoryId: Int!
+  totalAmount: Int!
+}
+
+"""The type of the finance record"""
+enum FinanceType {
+  INCOME
+  EXPENSE
+}
+
+type FinanceDetailsDto {
+  id: Int!
+  amount: Int!
+  date: String!
+  description: String
+  categoryId: Int!
+  userId: Int!
+  type: FinanceType!
+}
+
+type GetFinancesListResponseDto {
+  docs: [FinanceDetailsDto!]!
+  count: Int!
+}
+
 type Query {
   findAll(
     """The number of the page to return"""
@@ -59,6 +90,16 @@ type Query {
     pageSize: Int
   ): CategoriesListResponseDto!
   findCategoryById(id: Int!): CategoryByIdResponseDto
+  findFinances(
+    """The number of the page to return"""
+    page: Int
+
+    """The number of items per page"""
+    pageSize: Int
+  ): GetFinancesListResponseDto!
+  findCategoryStatistics: [StatisticsResponseDto!]!
+  findTotalStatistics: [StatisticsResponseDto!]!
+  findMonthlyStatistics(month: Int!, year: Int!): [StatisticsResponseDto!]!
 }
 
 type Mutation {
@@ -68,6 +109,9 @@ type Mutation {
   createCategory(createCategoryDto: CreateCategoryDto!): CreateCategoryResponseDto!
   updateCategoryById(id: Int!, updateCategoryDto: UpdateCategoryDto!): Boolean!
   deleteCategory(id: Int!): Boolean!
+  createFinance(createFinanceDto: CreateFinanceDto!): CreateFinanceResponseDto!
+  updateFinanceById(id: Int!, updateFinanceDto: UpdateFinanceDto!): Boolean!
+  deleteFinanceById(id: Int!): Boolean!
 }
 
 input CreateUserDto {
@@ -88,4 +132,20 @@ input CreateCategoryDto {
 
 input UpdateCategoryDto {
   name: String
+}
+
+input CreateFinanceDto {
+  amount: Int!
+  date: String!
+  description: String
+  categoryId: Int!
+  type: FinanceType!
+}
+
+input UpdateFinanceDto {
+  amount: Int
+  date: String
+  description: String
+  categoryId: Int
+  type: FinanceType
 }

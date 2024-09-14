@@ -1,13 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { FinanceType } from '../../../database/finances/finances.model';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { FinanceType } from '../enums/finances.enum';
 
+@ObjectType()
 export class StatisticsResponseDto {
-  @ApiProperty()
+  @Field(() => FinanceType)
   type: FinanceType;
 
-  @ApiProperty()
+  @Field(() => Int)
   categoryId: number;
 
-  @ApiProperty()
+  @Field(() => Int)
   totalAmount: number;
 }
