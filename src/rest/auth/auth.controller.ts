@@ -1,11 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { RegisterUserFeature } from '../../features/auth/register-user/register-user.feature';
