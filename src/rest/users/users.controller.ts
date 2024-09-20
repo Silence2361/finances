@@ -10,11 +10,10 @@ import { GetUsersFeature } from '../../features/users/get-users/get-users.featur
 import { GetUserByIdFeature } from '../../features/users/get-user-by-id/get-user-by-id.feature';
 import { DeleteUserByIdFeature } from '../../features/users/delete-user-by-id/delete-user-by-id.feature';
 import { UpdateUserByIdFeature } from '../../features/users/update-user-by-id/update-user-by-id.feature';
-import { UsersPaginationQueryDto } from './dto/pagination-query.dto';
 import { Args, Query, Mutation, Resolver, Int } from '@nestjs/graphql';
 
 @Resolver(() => UserByIdResponseDto)
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class UserResolver {
   constructor(
     private readonly createUserFeature: CreateUserFeature,
@@ -33,9 +32,10 @@ export class UserResolver {
 
   @Query(() => UsersListResponseDto)
   async findAll(
-    @Args() paginationQuery: UsersPaginationQueryDto,
+    @Args('page', { type: () => Int, nullable: true }) page: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize: number,
   ): Promise<UsersListResponseDto> {
-    return this.getUsersFeature.execute(paginationQuery);
+    return this.getUsersFeature.execute({ page, pageSize });
   }
 
   @Query(() => UserByIdResponseDto, { nullable: true })

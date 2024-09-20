@@ -39,10 +39,11 @@ export class FinancesResolver {
 
   @Query(() => GetFinancesListResponseDto)
   async findFinances(
-    @Args() paginationQuery: FinancesPaginationQueryDto,
+    @Args('page', { type: () => Int, nullable: true }) page: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize: number,
     @UserId() userId: number,
   ): Promise<GetFinancesListResponseDto> {
-    return this.findFinancesFeature.execute(userId, paginationQuery);
+    return this.findFinancesFeature.execute(userId, { page, pageSize });
   }
 
   @Mutation(() => Boolean)

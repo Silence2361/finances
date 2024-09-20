@@ -6,8 +6,8 @@ export class StatisticsResponseDto {
   @Field(() => FinanceType)
   type: FinanceType;
 
-  @Field(() => Int)
-  categoryId: number;
+  @Field(() => Int, { nullable: true })
+  categoryId?: number;
 
   @Field(() => Int)
   totalAmount: number;

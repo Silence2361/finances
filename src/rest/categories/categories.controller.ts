@@ -11,9 +11,10 @@ import { DeleteCategoryByIdFeature } from '../../features/categories/delete-cate
 import { CategoryPaginationQueryDto } from './dto/pagination-query.dto';
 import { CategoriesListResponseDto } from './dto/categories-list-response.dto';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => CategoryByIdResponseDto)
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class CategoryResolver {
   constructor(
     private readonly createCategoryFeature: CreateCategoryFeature,
@@ -32,9 +33,10 @@ export class CategoryResolver {
 
   @Query(() => CategoriesListResponseDto)
   async findAllCategories(
-    @Args() paginationQuery: CategoryPaginationQueryDto,
+    @Args('page', { type: () => Int, nullable: true }) page: number,
+    @Args('pageSize', { type: () => Int, nullable: true }) pageSize: number,
   ): Promise<CategoriesListResponseDto> {
-    return this.getCategoriesFeature.execute(paginationQuery);
+    return this.getCategoriesFeature.execute({ page, pageSize });
   }
 
   @Query(() => CategoryByIdResponseDto, { nullable: true })

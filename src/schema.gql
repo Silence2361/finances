@@ -58,7 +58,7 @@ type CreateFinanceResponseDto {
 
 type StatisticsResponseDto {
   type: FinanceType!
-  categoryId: Int!
+  categoryId: Int
   totalAmount: Int!
 }
 
@@ -84,29 +84,11 @@ type GetFinancesListResponseDto {
 }
 
 type Query {
-  findAll(
-    """The number of the page to return"""
-    page: Int
-
-    """The number of items per page"""
-    pageSize: Int
-  ): UsersListResponseDto!
+  findAll(page: Int, pageSize: Int): UsersListResponseDto!
   findUserById(id: Int!): UserByIdResponseDto
-  findAllCategories(
-    """The number of the page to return"""
-    page: Int
-
-    """The number of items per page"""
-    pageSize: Int
-  ): CategoriesListResponseDto!
+  findAllCategories(page: Int, pageSize: Int): CategoriesListResponseDto!
   findCategoryById(id: Int!): CategoryByIdResponseDto
-  findFinances(
-    """The number of the page to return"""
-    page: Int
-
-    """The number of items per page"""
-    pageSize: Int
-  ): GetFinancesListResponseDto!
+  findFinances(page: Int, pageSize: Int): GetFinancesListResponseDto!
   findCategoryStatistics: [StatisticsResponseDto!]!
   findTotalStatistics: [StatisticsResponseDto!]!
   findMonthlyStatistics(month: Int!, year: Int!): [StatisticsResponseDto!]!

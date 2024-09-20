@@ -41,7 +41,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       path: '/graphql',
-      context: ({ req }: { req: Request }) => ({ headers: req.headers }),
+      context: ({ req }: { req: Request }) => {
+        return { req };
+      },
     }),
     DatabaseModule,
     AuthModule,
