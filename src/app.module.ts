@@ -8,6 +8,7 @@ import { FinancesModule } from './rest/finances/finances.module';
 import { DatabaseModule } from './database/database.module';
 import { JwtModule } from './third-party/jwt/jwt.module';
 import { FeaturesModule } from './features/features.module';
+import { RedisModule } from 'nestjs-redis';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { FeaturesModule } from './features/features.module';
     FinancesModule,
     JwtModule,
     FeaturesModule,
+    RedisModule,
   ],
   controllers: [],
 })

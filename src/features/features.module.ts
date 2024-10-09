@@ -18,6 +18,8 @@ import { GetMonthlyStatisticsModule } from './finances/get-monthly-statistics/ge
 import { UpdateUserByIdModule } from './users/update-user-by-id/update-user-by-id.module';
 import { RegisterUserModule } from './auth/register-user/register-user.module';
 import { LoginUserModule } from './auth/login-user/login-user.module';
+import { GenerateTokenModule } from './auth/generate-refresh-token/refresh-token.module';
+import { RefreshTokenModule } from './auth/refresh-token/refresh-token.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
     GetMonthlyStatisticsModule,
     RegisterUserModule,
     LoginUserModule,
+    GenerateTokenModule,
+    RefreshTokenModule,
   ],
   exports: [
     CreateUserModule,
@@ -61,6 +65,8 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
     GetMonthlyStatisticsModule,
     RegisterUserModule,
     LoginUserModule,
+    GenerateTokenModule,
+    RefreshTokenModule,
   ],
 })
 export class FeaturesModule {}
