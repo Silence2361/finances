@@ -21,6 +21,7 @@ import { LoginUserModule } from './auth/login-user/login-user.module';
 import { GenerateTokenModule } from './auth/generate-refresh-token/refresh-token.module';
 import { RefreshTokenModule } from './auth/refresh-token/refresh-token.module';
 import { MailerFeatureModule } from './auth/send-activation/send-activation.module';
+import { ResendActivationCodeModule } from './auth/resend-activation-code/resend-activation-code.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { MailerFeatureModule } from './auth/send-activation/send-activation.modu
     GenerateTokenModule,
     RefreshTokenModule,
     MailerFeatureModule,
+    ResendActivationCodeModule,
   ],
   exports: [
     CreateUserModule,
@@ -70,6 +72,7 @@ import { MailerFeatureModule } from './auth/send-activation/send-activation.modu
     GenerateTokenModule,
     RefreshTokenModule,
     MailerFeatureModule,
+    ResendActivationCodeModule,
   ],
 })
 export class FeaturesModule {}

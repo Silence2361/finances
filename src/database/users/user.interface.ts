@@ -17,6 +17,7 @@ export interface IUpdateUser {
   email?: string;
   password?: string;
   role?: UserRole;
+  activationCode?: string;
 }
 
 export interface IUsersCount {

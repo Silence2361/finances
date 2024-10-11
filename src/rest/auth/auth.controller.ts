@@ -25,6 +25,8 @@ import { Request, Response } from 'express';
 import { GenerateTokenHandlerFeature } from '../../features/auth/generate-refresh-token/refresh-token.feature';
 import { GenerateTokenResponseDto } from './dto/generate-token-response.dto';
 import { GenerateTokenDto } from './dto/generate-token.dto';
+import { ResendActivationCodeFeature } from '../../features/auth/resend-activation-code/resend-activation-code.feature';
+import { ResendActivationCodeDto } from './dto/resend-activatation-code.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -35,6 +37,7 @@ export class AuthController {
     private readonly loginUserFeature: LoginUserFeature,
     private readonly refreshTokenFeature: RefreshTokenHandlerFeature,
     private readonly generateTokenHandlerFeature: GenerateTokenHandlerFeature,
+    private readonly resendActivationCodeFeature: ResendActivationCodeFeature,
   ) {}
 
   @Post('register')
@@ -76,11 +79,17 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Token successfully refreshed.' })
   @HttpCode(HttpStatus.OK)
   async refreshToken(
-    // @Cookie('refreshToken') refreshToken: string,
     @Body() refreshTokenDto: RefreshTokenRequestDto,
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<RefreshTokenCommandResponseDto> {
     return this.refreshTokenFeature.execute(refreshTokenDto, req, res);
+  }
+
+  @Post('resend-activation')
+  async resendActivationCode(
+    @Body() resendActivationCode: ResendActivationCodeDto,
+  ): Promise<void> {
+    await this.resendActivationCodeFeature.execute(resendActivationCode);
   }
 }
