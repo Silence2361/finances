@@ -19,7 +19,6 @@ import { RegisterResponseDto } from './dto/register-response.dto';
 import { RegisterUserFeature } from '../../features/auth/register-user/register-user.feature';
 import { LoginUserFeature } from '../../features/auth/login-user/login-user.feature';
 import { RefreshTokenHandlerFeature } from '../../features/auth/refresh-token/refresh-token-handler.feature';
-import { Cookie } from '../../common/decorators/cookie.decorator';
 import { RefreshTokenCommandResponseDto } from './dto/refresh-token-response.dto';
 import { RefreshTokenRequestDto } from './dto/refresh-token-request.dto';
 import { Request, Response } from 'express';
