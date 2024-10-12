@@ -5,6 +5,7 @@ export interface IUser {
   email: string;
   password: string;
   role: UserRole;
+  resetPasswordCode?: string;
 }
 
 export interface ICreateUser {
@@ -18,6 +19,7 @@ export interface IUpdateUser {
   password?: string;
   role?: UserRole;
   activationCode?: string;
+  resetPasswordCode?: string;
 }
 
 export interface IUsersCount {

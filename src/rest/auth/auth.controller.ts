@@ -27,6 +27,10 @@ import { GenerateTokenResponseDto } from './dto/generate-token-response.dto';
 import { GenerateTokenDto } from './dto/generate-token.dto';
 import { ResendActivationCodeFeature } from '../../features/auth/resend-activation-code/resend-activation-code.feature';
 import { ResendActivationCodeDto } from './dto/resend-activatation-code.dto';
+import { SendPasswordResetCodeDto } from './dto/send-password-reset-code.dto';
+import { SendPasswordResetCodeFeature } from '../../features/auth/send-password-reset-code/send-password-reset-code.feature';
+import { ResetPasswordFeature } from '../../features/auth/reset-password/reset-password.feature';
+import { ResetPasswordDto } from './dto/reset.password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -38,6 +42,8 @@ export class AuthController {
     private readonly refreshTokenFeature: RefreshTokenHandlerFeature,
     private readonly generateTokenHandlerFeature: GenerateTokenHandlerFeature,
     private readonly resendActivationCodeFeature: ResendActivationCodeFeature,
+    private readonly sendPasswordResetCodeFeature: SendPasswordResetCodeFeature,
+    private readonly resetPasswordFeature: ResetPasswordFeature,
   ) {}
 
   @Post('register')
@@ -87,9 +93,27 @@ export class AuthController {
   }
 
   @Post('resend-activation')
+  @ApiOperation({ summary: 'Resend activation' })
+  @HttpCode(HttpStatus.OK)
   async resendActivationCode(
     @Body() resendActivationCode: ResendActivationCodeDto,
   ): Promise<void> {
     await this.resendActivationCodeFeature.execute(resendActivationCode);
+  }
+
+  @Post('send-password-reset-code')
+  @ApiOperation({ summary: 'Send password reset code' })
+  @HttpCode(HttpStatus.OK)
+  async sendPasswordResetCode(
+    @Body() sendPasswordResetCode: SendPasswordResetCodeDto,
+  ): Promise<void> {
+    await this.sendPasswordResetCodeFeature.execute(sendPasswordResetCode);
+  }
+
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Reset password' })
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() resetPassword: ResetPasswordDto): Promise<void> {
+    await this.resetPasswordFeature.execute(resetPassword);
   }
 }

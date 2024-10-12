@@ -13,6 +13,7 @@ export class User extends Model {
   email: string;
   password: string;
   role: UserRole;
+  resetPasswordCode: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -38,6 +39,7 @@ export class User extends Model {
         id: { type: 'integer' },
         email: { type: 'string', format: 'email', minLength: 6, maxLength: 40 },
         password: { type: 'string', minLength: 6, maxLength: 255 },
+        resetPasswordCode: { type: ['string', 'null'], maxLength: 255 },
         role: {
           type: 'string',
           enum: Object.values(UserRole),

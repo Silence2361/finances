@@ -22,6 +22,8 @@ import { GenerateTokenModule } from './auth/generate-refresh-token/refresh-token
 import { RefreshTokenModule } from './auth/refresh-token/refresh-token.module';
 import { MailerFeatureModule } from './auth/send-activation/send-activation.module';
 import { ResendActivationCodeModule } from './auth/resend-activation-code/resend-activation-code.module';
+import { SendPasswordResetCodeModule } from './auth/send-password-reset-code/send-password-reset-code.module';
+import { ResetPasswordModule } from './auth/reset-password/reset-password.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { ResendActivationCodeModule } from './auth/resend-activation-code/resend
     RefreshTokenModule,
     MailerFeatureModule,
     ResendActivationCodeModule,
+    SendPasswordResetCodeModule,
+    ResetPasswordModule,
   ],
   exports: [
     CreateUserModule,
@@ -73,6 +77,8 @@ import { ResendActivationCodeModule } from './auth/resend-activation-code/resend
     RefreshTokenModule,
     MailerFeatureModule,
     ResendActivationCodeModule,
+    SendPasswordResetCodeModule,
+    ResetPasswordModule,
   ],
 })
 export class FeaturesModule {}
