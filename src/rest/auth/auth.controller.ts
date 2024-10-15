@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
 import {
@@ -31,6 +33,8 @@ import { SendPasswordResetCodeDto } from './dto/send-password-reset-code.dto';
 import { SendPasswordResetCodeFeature } from '../../features/auth/send-password-reset-code/send-password-reset-code.feature';
 import { ResetPasswordFeature } from '../../features/auth/reset-password/reset-password.feature';
 import { ResetPasswordDto } from './dto/reset.password.dto';
+import { JwtAuthGuard } from '../../third-party/jwt/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -115,5 +119,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() resetPassword: ResetPasswordDto): Promise<void> {
     await this.resetPasswordFeature.execute(resetPassword);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req: Request) {}
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req: Request) {
+    return {
+      message: 'User information from Google',
+      user: req.user,
+    };
   }
 }

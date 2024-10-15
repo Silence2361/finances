@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { DatabaseModule } from '../../database/database.module';
 import { UsersRepository } from '../../database/users/user.repository';
 import { FeaturesModule } from '../../features/features.module';
+import { GoogleStrategy } from '../../third-party/google/google.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { FeaturesModule } from '../../features/features.module';
     JwtModule,
     FeaturesModule,
   ],
-  providers: [JwtStrategy, UsersRepository],
+  providers: [JwtStrategy, GoogleStrategy, UsersRepository],
   controllers: [AuthController],
 })
 export class AuthModule {}
